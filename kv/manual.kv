@@ -1,0 +1,260 @@
+<ManualScreen>:
+    name: "manual"
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            title: "FRP Pipe - Manual"
+            elevation: 4
+            left_action_items: [["arrow-left", lambda x: setattr(app.root, "current", "home")]]
+
+        MDBoxLayout:
+            orientation: "horizontal"
+            padding: "24dp"
+            spacing: "24dp"
+
+            # ---------- 左：直线轴 ----------
+            MDCard:
+                orientation: "vertical"
+                padding: "24dp"
+                size_hint_x: 0.5
+                radius: [16, 16, 16, 16]
+                md_bg_color: 0.17, 0.19, 0.21, 1
+
+                MDLabel:
+                    text: "Linear Axes"
+                    font_style: "Subtitle1"
+                    theme_text_color: "Secondary"
+
+                Widget:
+                    size_hint_y: 0.03
+
+                MDLabel:
+                    text: "Step (mm)"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: dp(24)
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    spacing: "8dp"
+                    size_hint_y: None
+                    height: dp(40)
+
+                    MDSlider:
+                        id: linear_step_slider
+                        min: 0.1
+                        max: 10.0
+                        value: 0.5
+                        step: 0.1
+                        on_value: root.on_linear_step_slider(self.value)
+
+                    MDLabel:
+                        id: linear_step_label
+                        text: "0.5 mm"
+                        theme_text_color: "Secondary"
+                        size_hint_x: None
+                        width: dp(80)
+
+                Widget:
+                    size_hint_y: 0.05
+
+                # ---- 外径滑台 ----
+                MDLabel:
+                    text: "OD Slide"
+                    theme_text_color: "Secondary"
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    spacing: "8dp"
+                    size_hint_y: None
+                    height: dp(40)
+
+                    MDRaisedButton:
+                        text: "OD-"
+                        on_release: root.jog_od_neg()
+
+                    MDRaisedButton:
+                        text: "OD+"
+                        on_release: root.jog_od_pos()
+
+                    MDRaisedButton:
+                        text: "Home"
+                        on_release: root.home_od()
+
+                    MDLabel:
+                        id: od_pos_label
+                        text: "0.0 mm"
+                        theme_text_color: "Custom"
+                        halign: "right"
+
+                Widget:
+                    size_hint_y: 0.02
+
+                # ---- 内径滑台 ----
+                MDLabel:
+                    text: "ID Slide"
+                    theme_text_color: "Secondary"
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    spacing: "8dp"
+                    size_hint_y: None
+                    height: dp(40)
+
+                    MDRaisedButton:
+                        text: "ID-"
+                        on_release: root.jog_id_neg()
+
+                    MDRaisedButton:
+                        text: "ID+"
+                        on_release: root.jog_id_pos()
+
+                    MDRaisedButton:
+                        text: "Home"
+                        on_release: root.home_id()
+
+                    MDLabel:
+                        id: id_pos_label
+                        text: "0.0 mm"
+                        theme_text_color: "Custom"
+                        halign: "right"
+
+                Widget:
+                    size_hint_y: 0.02
+
+                # ---- 内径测头伸缩 ----
+                MDLabel:
+                    text: "ID Head Extend"
+                    theme_text_color: "Secondary"
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    spacing: "8dp"
+                    size_hint_y: None
+                    height: dp(40)
+
+                    MDRaisedButton:
+                        text: "In"
+                        on_release: root.jog_head_in()
+
+                    MDRaisedButton:
+                        text: "Out"
+                        on_release: root.jog_head_out()
+
+                    MDRaisedButton:
+                        text: "Home"
+                        on_release: root.home_head()
+
+                    MDLabel:
+                        id: head_pos_label
+                        text: "0.0 mm"
+                        theme_text_color: "Custom"
+                        halign: "right"
+
+            # ---------- 右：旋转轴 ----------
+            MDCard:
+                orientation: "vertical"
+                padding: "24dp"
+                size_hint_x: 0.5
+                radius: [16, 16, 16, 16]
+                md_bg_color: 0.17, 0.19, 0.21, 1
+
+                MDLabel:
+                    text: "Rotary Axes"
+                    font_style: "Subtitle1"
+                    theme_text_color: "Secondary"
+
+                Widget:
+                    size_hint_y: 0.03
+
+                MDLabel:
+                    text: "Step (deg)"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: dp(24)
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    spacing: "8dp"
+                    size_hint_y: None
+                    height: dp(40)
+
+                    MDSlider:
+                        id: rot_step_slider
+                        min: 1
+                        max: 90
+                        value: 5
+                        step: 1
+                        on_value: root.on_rot_step_slider(self.value)
+
+                    MDLabel:
+                        id: rot_step_label
+                        text: "5.0 °"
+                        theme_text_color: "Secondary"
+                        size_hint_x: None
+                        width: dp(80)
+
+                Widget:
+                    size_hint_y: 0.05
+
+                # ---- 主旋转电机 ----
+                MDLabel:
+                    text: "Main Pipe Rotate"
+                    theme_text_color: "Secondary"
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    spacing: "8dp"
+                    size_hint_y: None
+                    height: dp(40)
+
+                    MDRaisedButton:
+                        text: "CCW"
+                        on_release: root.jog_main_ccw()
+
+                    MDRaisedButton:
+                        text: "CW"
+                        on_release: root.jog_main_cw()
+
+                    MDRaisedButton:
+                        text: "Home"
+                        on_release: root.home_main_rot()
+
+                    MDLabel:
+                        id: main_angle_label
+                        text: "0.0 °"
+                        theme_text_color: "Custom"
+                        halign: "right"
+
+                Widget:
+                    size_hint_y: 0.02
+
+                # ---- 从旋转电机 ----
+                MDLabel:
+                    text: "Aux Rotate"
+                    theme_text_color: "Secondary"
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    spacing: "8dp"
+                    size_hint_y: None
+                    height: dp(40)
+
+                    MDRaisedButton:
+                        text: "CCW"
+                        on_release: root.jog_aux_ccw()
+
+                    MDRaisedButton:
+                        text: "CW"
+                        on_release: root.jog_aux_cw()
+
+                    MDRaisedButton:
+                        text: "Home"
+                        on_release: root.home_aux_rot()
+
+                    MDLabel:
+                        id: aux_angle_label
+                        text: "0.0 °"
+                        theme_text_color: "Custom"
+                        halign: "right"

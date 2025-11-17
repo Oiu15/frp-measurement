@@ -1,0 +1,233 @@
+<AutoMeasureScreen>:
+    name: "auto"
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        # 顶部工具栏
+        MDTopAppBar:
+            title: "FRP Pipe - Auto Measure"
+            elevation: 4
+            left_action_items: [["arrow-left", lambda x: setattr(app.root, "current", "home")]]
+            right_action_items: [["play-circle", lambda x: None]]
+
+        # 下面是真正的内容区（水平三列）
+        MDBoxLayout:
+            orientation: "horizontal"
+            padding: dp(16)
+            spacing: dp(16)
+
+            # -------- 左侧：工艺步骤 --------
+            MDCard:
+                orientation: "vertical"
+                size_hint_x: 0.25
+                padding: dp(8)
+                radius: dp(12)
+                md_bg_color: 0.08, 0.08, 0.08, 1
+
+                MDLabel:
+                    text: "Auto Sequence"
+                    font_style: "Subtitle1"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: dp(32)
+
+                MDLabel:
+                    id: step_lbl_1
+                    text: "1 · Home axes"
+                    theme_text_color: "Secondary"
+
+                MDLabel:
+                    id: step_lbl_2
+                    text: "2 · Move to Edge 1"
+                    theme_text_color: "Secondary"
+
+                MDLabel:
+                    id: step_lbl_3
+                    text: "3 · Move to Edge 2"
+                    theme_text_color: "Secondary"
+
+                MDLabel:
+                    id: step_lbl_4
+                    text: "4 · Position @Measure"
+                    theme_text_color: "Secondary"
+
+                MDLabel:
+                    id: step_lbl_5
+                    text: "5 · Rotate & Acquire"
+                    theme_text_color: "Secondary"
+
+                MDLabel:
+                    id: step_lbl_6
+                    text: "6 · Compute Result"
+                    theme_text_color: "Secondary"
+
+                MDLabel:
+                    id: step_lbl_7
+                    text: "7 · Return / Standby"
+                    theme_text_color: "Secondary"
+
+            # -------- 中间：实时数据 & 曲线 --------
+            MDCard:
+                orientation: "vertical"
+                padding: "16dp"
+                size_hint_x: 0.35
+                radius: [16, 16, 16, 16]
+                md_bg_color: 0.17, 0.19, 0.21, 1
+
+                MDLabel:
+                    text: "Live Data"
+                    font_style: "Subtitle1"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: dp(32)
+
+                GridLayout:
+                    cols: 2
+                    size_hint_y: None
+                    height: self.minimum_height
+                    row_default_height: dp(30)
+                    row_force_default: True
+
+                    MDLabel:
+                        text: "Outer"
+                        theme_text_color: "Secondary"
+                    MDLabel:
+                        id: auto_outer_value
+                        text: "152.00 mm"
+                        font_style: "H6"
+                        theme_text_color: "Custom"
+                        text_color: 0.49, 0.88, 1, 1
+
+                    MDLabel:
+                        text: "Inner"
+                        theme_text_color: "Secondary"
+                    MDLabel:
+                        id: auto_inner_value
+                        text: "76.00 mm"
+                        font_style: "H6"
+                        theme_text_color: "Custom"
+                        text_color: 1, 0.3, 1, 1
+
+                    MDLabel:
+                        text: "Angle"
+                        theme_text_color: "Secondary"
+                    MDLabel:
+                        id: auto_angle
+                        text: "0.0 °"
+                        theme_text_color: "Primary"
+
+                FloatLayout:
+                    size_hint_y: 0.55
+
+                    # 曲线本体
+                    LivePlotWidget:
+                        id: live_plot
+                        size_hint: 1, 1
+                        pos_hint: {"x": 0, "y": 0}
+
+                    # 图例 Overlay
+                    MDBoxLayout:
+                        id: legend
+                        orientation: "horizontal"
+                        spacing: dp(10)
+                        padding: dp(8)
+                        size_hint: None, None
+                        height: self.minimum_height
+                        width: self.minimum_width
+                        pos_hint: {"right": 0.98, "top": 0.98}
+                        md_bg_color: 0.0, 0.0, 0.0, 0.4
+                        radius: [8, 8, 8, 8]
+
+                        # Outer
+                        MDIcon:
+                            icon: "circle"
+                            theme_text_color: "Custom"
+                            text_color: 0.49, 0.88, 1, 1   # 外径线颜色
+                            font_size: dp(12)
+                            size_hint: None, None
+                            size: dp(14), dp(14)
+
+                        Label:
+                            text: "Outer"
+                            color: 1, 1, 1, 1
+                            size_hint: None, None
+                            font_size: sp(12)
+                            text_size: None, None
+                            size: self.texture_size
+
+                        Widget:
+                            size_hint_x: None
+                            width: dp(4)
+
+                        # Inner
+                        MDIcon:
+                            icon: "circle"
+                            theme_text_color: "Custom"
+                            text_color: 1, 0.3, 1, 1   # 内径线颜色
+                            font_size: dp(12)
+                            size_hint: None, None
+                            size: dp(14), dp(14)
+
+                        Label:
+                            text: "Inner"
+                            color: 1, 1, 1, 1
+                            size_hint: None, None
+                            font_size: sp(12)
+                            text_size: None, None
+                            size: self.texture_size
+
+            # -------- 右侧：Servos / IO --------
+            MDCard:
+                orientation: "vertical"
+                padding: "16dp"
+                size_hint_x: 0.35
+                radius: [16, 16, 16, 16]
+                md_bg_color: 0.17, 0.19, 0.21, 1
+
+                MDLabel:
+                    text: "Servos / IO"
+                    font_style: "Subtitle1"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: dp(32)
+
+                # 这里保留你原来的内容（伺服状态、PLC 状态等）
+                GridLayout:
+                    cols: 2
+                    size_hint_y: None
+                    height: self.minimum_height
+                    row_default_height: dp(24)
+                    row_force_default: True
+
+                    MDLabel:
+                        text: "Servo A"
+                        theme_text_color: "Secondary"
+                    MDLabel:
+                        text: "ON"
+                        theme_text_color: "Custom"
+                        text_color: 0.4, 1, 0.5, 1
+
+                    MDLabel:
+                        text: "Servo B"
+                        theme_text_color: "Secondary"
+                    MDLabel:
+                        text: "ON"
+                        theme_text_color: "Custom"
+                        text_color: 0.4, 1, 0.5, 1
+
+                    MDLabel:
+                        text: "Servo C"
+                        theme_text_color: "Secondary"
+                    MDLabel:
+                        text: "ON"
+                        theme_text_color: "Custom"
+                        text_color: 0.4, 1, 0.5, 1
+
+                    MDLabel:
+                        text: "PLC"
+                        theme_text_color: "Secondary"
+                    MDLabel:
+                        text: "OK"
+                        theme_text_color: "Custom"
+                        text_color: 0.4, 1, 0.5, 1

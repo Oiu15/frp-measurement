@@ -1,0 +1,22 @@
+<AlarmScreen>:
+    name: "alarm"
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            title: "FRP Pipe - Alarms"
+            elevation: 4
+            left_action_items: [["arrow-left", lambda x: setattr(app.root, "current", "home")]]
+
+        MDBoxLayout:
+            padding: "24dp"
+
+            MDCard:
+                orientation: "vertical"
+                padding: "24dp"
+                radius: [16, 16, 16, 16]
+                md_bg_color: 0.17, 0.19, 0.21, 1
+
+                MDLabel:
+                    text: "Alarm List (TODO)"
+                    theme_text_color: "Secondary"

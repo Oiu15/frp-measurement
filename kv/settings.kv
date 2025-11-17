@@ -1,0 +1,42 @@
+<SettingsScreen>:
+    name: "settings"
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: dp(16)
+        spacing: dp(16)
+
+        MDTopAppBar:
+            title: "Settings"
+            left_action_items: [["arrow-left", lambda x: app.go_home()]]
+
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: dp(12)
+
+            MDTextField:
+                id: plc_ip_field
+                hint_text: "PLC IP Address"
+                text: "192.168.0.10"
+
+            MDTextField:
+                id: plc_port_field
+                hint_text: "PLC Port"
+                text: "502"
+                input_filter: "int"
+
+            MDTextField:
+                id: samples_field
+                hint_text: "Samples per revolution"
+                text: "180"
+                input_filter: "int"
+
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(12)
+            padding: 0, dp(8), 0, 0
+
+            Widget:
+            MDRaisedButton:
+                text: "Apply"
+                on_release: root.on_apply_button()

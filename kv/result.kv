@@ -1,0 +1,45 @@
+<ResultScreen>:
+    name: "result"
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: dp(16)
+        spacing: dp(16)
+
+        MDTopAppBar:
+            title: "Result"
+            left_action_items: [["arrow-left", lambda x: app.go_home()]]
+
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: dp(12)
+
+            # 表格区域
+            MDCard:
+                orientation: "vertical"
+                padding: dp(8)
+                radius: dp(12)
+                md_bg_color: 0.08, 0.08, 0.08, 1
+                MDLabel:
+                    text: "Measurement Report"
+                    theme_text_color: "Secondary"
+                    font_style: "Subtitle1"
+                    padding_y: dp(4)
+                MDSeparator:
+                MDBoxLayout:
+                    id: result_table_container   # 在 Python 里会拿这个 id
+                    orientation: "vertical"
+
+            # 下面可以保留简单的结果总结
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(40)
+                spacing: dp(12)
+
+                MDLabel:
+                    id: res_ok_label
+                    text: "OK"
+                    font_style: "H6"
+                    theme_text_color: "Custom"
+                    text_color: (0, 1, 0, 1)
+
+                Widget:
