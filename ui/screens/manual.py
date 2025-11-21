@@ -49,7 +49,7 @@ class ManualScreen(MDScreen):
         if "linear_step_label" in ids:
             ids.linear_step_label.text = f"{self.linear_step_mm:0.1f} mm"
         if "linear_step_slider" in ids:
-            ids.linear_step_slider.value = self.linear_step_mm
+            ids.linear_step_slider.value = self.linear_step_mm * 10
 
         if "rot_step_label" in ids:
             ids.rot_step_label.text = f"{self.rotary_step_deg:0.1f} °"
