@@ -47,26 +47,32 @@
                         size_hint: 1, 1
 
                         ResultCard:
+                            id: length_card
                             title: "Length"
                             value: "123.4"
                             unit: "mm"
                         ResultCard:
+                            id: od_card
                             title: "OD"
                             value: "100.0"
                             unit: "mm"
                         ResultCard:
+                            id: id_card
                             title: "ID"
                             value: "95.0"
                             unit: "mm"
                         ResultCard:
+                            id: roundness_card
                             title: "Roundness"
                             value: "0.20"
                             unit: "mm"
                         ResultCard:
+                            id: straightness_card
                             title: "Straightness"
                             value: "0.15"
                             unit: "mm/m"
                         ResultCard:
+                            id: concentricity_card
                             title: "Concentricity"
                             value: "0.10"
                             unit: "mm"
@@ -123,21 +129,27 @@
                         spacing: "12dp"
                         row_default_height: "60dp"
                         InfoItem:
+                            id: system_state_item
                             label: "System State"
                             value: "Ready"
                         InfoItem:
+                            id: measurement_state_item
                             label: "Measurement State"
                             value: "Idle"
                         InfoItem:
+                            id: runtime_item
                             label: "Runtime"
                             value: "00:10:00"
                         InfoItem:
+                            id: current_recipe_item
                             label: "Current Recipe"
                             value: "Demo-01"
                         InfoItem:
+                            id: part_count_item
                             label: "Part Count"
                             value: "12"
                         InfoItem:
+                            id: ng_count_item
                             label: "NG Count"
                             value: "1"
 
@@ -164,10 +176,19 @@
                                 halign: "left"
                                 theme_text_color: "Secondary"
 
-                        MDFloatingActionButton:
-                            id: status_button
-                            icon: "power"
-                            md_bg_color: "#607d8b"
-                            size: "96dp", "96dp"
-                            elevation_normal: 10
-                            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        MDButton:
+                            id: state_button
+                            style: "elevated"
+                            size_hint: None, None
+                            size: "120dp", "64dp"
+                            theme_bg_color: "Custom"
+                            md_bg_color: 0.2, 0.6, 0.9, 1
+                            on_release: root.on_state_button_pressed()
+
+                            MDButtonText:
+                                id: state_button_text
+                                text: "Start"
+                                theme_text_color: "Custom"
+                                text_color: 1, 1, 1, 1
+
+
