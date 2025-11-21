@@ -146,17 +146,28 @@
                     padding: "16dp"
                     size_hint_x: 0.5
                     MDBoxLayout:
-                        orientation: "vertical"
-                        spacing: "12dp"
-                        MDLabel:
-                            text: "Process Info"
-                            halign: "center"
-                        MDLabel:
-                            text: "Status Button"
-                            halign: "center"
+                        orientation: "horizontal"
+                        spacing: "16dp"
+
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            spacing: "10dp"
+                            size_hint_x: 0.6
+                            MDLabel:
+                                id: current_step_label
+                                text: "Current Step: 1"
+                                halign: "left"
+                                theme_text_color: "Primary"
+                            MDLabel:
+                                id: next_step_label
+                                text: "Next Step: 2"
+                                halign: "left"
+                                theme_text_color: "Secondary"
+
                         MDFloatingActionButton:
+                            id: status_button
                             icon: "power"
                             md_bg_color: "#607d8b"
-                            size: "84dp", "84dp"
-                            elevation_normal: 8
-                            pos_hint: {"center_x": 0.5}
+                            size: "96dp", "96dp"
+                            elevation_normal: 10
+                            pos_hint: {"center_x": 0.5, "center_y": 0.5}
