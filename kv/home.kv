@@ -5,103 +5,95 @@
 
         MDTopAppBar:
             title: "FRP Pipe - Home"
-            elevation: 4
             left_action_items: [["menu", lambda x: None]]
-            right_action_items: [["cog", lambda x: setattr(app.root, "current", "settings")]]
+            right_action_items: [["cog", lambda x: setattr(app.root, "current", "settings")], ["book-open-variant", lambda x: setattr(app.root, "current", "manual")], ["file-chart", lambda x: setattr(app.root, "current", "result")]]
 
         MDBoxLayout:
-            orientation: "horizontal"
-            padding: "24dp"
-            spacing: "24dp"
+            orientation: "vertical"
+            padding: "16dp"
+            spacing: "16dp"
 
-            MDCard:
-                orientation: "vertical"
-                padding: "24dp"
-                size_hint_x: 0.4
-                radius: [16, 16, 16, 16]
-                md_bg_color: 0.17, 0.19, 0.21, 1
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: "16dp"
+                size_hint_y: 0.5
 
-                MDLabel:
-                    text: "Status"
-                    theme_text_color: "Secondary"
-                    font_style: "Subtitle1"
+                MDCard:
+                    orientation: "vertical"
+                    padding: "16dp"
+                    size_hint_x: 0.5
+                    MDGridLayout:
+                        cols: 3
+                        rows: 2
+                        spacing: "12dp"
+                        adaptive_height: True
+                        adaptive_width: True
+                        size_hint: 1, 1
 
-                MDLabel:
-                    id: status_label
-                    text: "READY"
-                    font_style: "H4"
-                    halign: "left"
-                    theme_text_color: "Custom"
-                    text_color: 0.4, 1, 0.5, 1
+                        ResultCard:
+                            title: "Length"
+                            value: "123.4"
+                            unit: "mm"
+                        ResultCard:
+                            title: "OD"
+                            value: "100.0"
+                            unit: "mm"
+                        ResultCard:
+                            title: "ID"
+                            value: "95.0"
+                            unit: "mm"
+                        ResultCard:
+                            title: "Roundness"
+                            value: "0.20"
+                            unit: "mm"
+                        ResultCard:
+                            title: "Straightness"
+                            value: "0.15"
+                            unit: "mm/m"
+                        ResultCard:
+                            title: "Concentricity"
+                            value: "0.10"
+                            unit: "mm"
 
-                Widget:
-                    size_hint_y: 0.2
-
-                MDBoxLayout:
-                    orientation: "horizontal"
-                    spacing: "12dp"
-                    size_hint_y: None
-                    height: "48dp"
-
-                    MDRaisedButton:
-                        text: "Start Auto"
-                        size_hint_x: 0.5
-                        on_release: app.root.current = "auto"
-
-                    MDRaisedButton:
-                        text: "Manual"
-                        size_hint_x: 0.5
-                        on_release: app.root.current = "manual"
-
-            MDCard:
-                orientation: "vertical"
-                padding: "24dp"
-                radius: [16, 16, 16, 16]
-                md_bg_color: 0.17, 0.19, 0.21, 1
-
-                MDLabel:
-                    text: "Live Values"
-                    font_style: "Subtitle1"
-                    theme_text_color: "Secondary"
-
-                GridLayout:
-                    cols: 2
-                    padding: [0, "12dp", 0, 0]
-                    row_default_height: "40dp"
-                    spacing: "8dp"
-
+                MDCard:
+                    orientation: "vertical"
+                    padding: "16dp"
+                    size_hint_x: 0.5
                     MDLabel:
-                        text: "Outer Diameter"
-                        theme_text_color: "Secondary"
-                    MDLabel:
-                        id: outer_value
-                        text: "0.00 mm"
-                        font_style: "H6"
-                        theme_text_color: "Custom"
-                        text_color: 0.49, 0.88, 1, 1
+                        text: "Peripheral Status"
+                        halign: "center"
+                        valign: "center"
 
-                    MDLabel:
-                        text: "Inner Diameter"
-                        theme_text_color: "Secondary"
-                    MDLabel:
-                        id: inner_value
-                        text: "0.00 mm"
-                        font_style: "H6"
-                        theme_text_color: "Custom"
-                        text_color: 0.49, 0.88, 1, 1
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: "16dp"
+                size_hint_y: 0.5
 
+                MDCard:
+                    orientation: "vertical"
+                    padding: "16dp"
+                    size_hint_x: 0.5
                     MDLabel:
-                        text: "Angle"
-                        theme_text_color: "Secondary"
-                    MDLabel:
-                        id: angle_value
-                        text: "0.0 °"
-                        theme_text_color: "Primary"
+                        text: "Runtime Info"
+                        halign: "center"
+                        valign: "center"
 
-                    MDLabel:
-                        text: "Slide Pos."
-                        theme_text_color: "Secondary"
-                    MDLabel:
-                        id: slide_value
-                        text: "0.0 mm"
-                        theme_text_color: "Primary"
+                MDCard:
+                    orientation: "vertical"
+                    padding: "16dp"
+                    size_hint_x: 0.5
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        spacing: "12dp"
+                        MDLabel:
+                            text: "Process Info"
+                            halign: "center"
+                        MDLabel:
+                            text: "Status Button"
+                            halign: "center"
+                        MDFloatingActionButton:
+                            icon: "power"
+                            md_bg_color: "#607d8b"
+                            size: "84dp", "84dp"
+                            elevation_normal: 8
+                            pos_hint: {"center_x": 0.5}

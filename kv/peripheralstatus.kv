@@ -1,0 +1,19 @@
+<PeripheralStatusRow@MDBoxLayout>:
+    text: ""
+    lamp_color: 0, 1, 0, 1  # default green
+    spacing: "8dp"
+    size_hint_y: None
+    height: "32dp"
+    MDLabel:
+        text: root.text
+        halign: "left"
+    MDIcon:
+        icon: "circle"
+        theme_text_color: "Custom"
+        text_color: root.lamp_color
+
+PeripheralStatusRow:
+    text: "Rotary Servo"
+PeripheralStatusRow:
+    text: "OD Slide"
+...
