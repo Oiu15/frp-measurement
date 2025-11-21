@@ -9,7 +9,7 @@
             title: "FRP Pipe - Auto Measure"
             elevation: 4
             left_action_items: [["arrow-left", lambda x: setattr(app.root, "current", "home")]]
-            right_action_items: [["play-circle", lambda x: None]]
+            right_action_items: [["play-circle", lambda x: root.start_auto()]]
 
         # 下面是真正的内容区（水平三列）
         MDBoxLayout:
