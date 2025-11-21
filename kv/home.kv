@@ -117,10 +117,29 @@
                     orientation: "vertical"
                     padding: "16dp"
                     size_hint_x: 0.5
-                    MDLabel:
-                        text: "Runtime Info"
-                        halign: "center"
-                        valign: "center"
+                    MDGridLayout:
+                        cols: 2
+                        rows: 3
+                        spacing: "12dp"
+                        row_default_height: "60dp"
+                        InfoItem:
+                            label: "System State"
+                            value: "Ready"
+                        InfoItem:
+                            label: "Measurement State"
+                            value: "Idle"
+                        InfoItem:
+                            label: "Runtime"
+                            value: "00:10:00"
+                        InfoItem:
+                            label: "Current Recipe"
+                            value: "Demo-01"
+                        InfoItem:
+                            label: "Part Count"
+                            value: "12"
+                        InfoItem:
+                            label: "NG Count"
+                            value: "1"
 
                 MDCard:
                     orientation: "vertical"
