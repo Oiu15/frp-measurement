@@ -6,8 +6,16 @@
         spacing: dp(16)
 
         MDTopAppBar:
-            title: "Result"
-            left_action_items: [["arrow-left", lambda x: app.go_home()]]
+            type: "small"
+
+            MDTopAppBarLeadingButtonContainer:
+                MDActionTopAppBarButton:
+                    icon: "arrow-left"
+                    on_release: app.change_screen("home")
+
+            MDTopAppBarTitle:
+                text: "Result"
+                halign: "center"
 
         MDBoxLayout:
             orientation: "vertical"

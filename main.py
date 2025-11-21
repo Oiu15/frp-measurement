@@ -151,6 +151,11 @@ class FRPHMIDemo(MDApp):
         # center_window(1280, 720)
         Window.maximize()
 
+    def change_screen(self, name: str):
+        """Switch to a named screen if it exists."""
+        if self.root and name in self.root.screen_names:
+            self.root.current = name
+
     def go_home(self, *args):
         self.root.current = "home"
 

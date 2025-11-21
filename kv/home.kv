@@ -4,9 +4,25 @@
         orientation: "vertical"
 
         MDTopAppBar:
-            title: "FRP Pipe - Home"
-            left_action_items: [["menu", lambda x: None]]
-            right_action_items: [["cog", lambda x: setattr(app.root, "current", "settings")], ["book-open-variant", lambda x: setattr(app.root, "current", "manual")], ["file-chart", lambda x: setattr(app.root, "current", "result")]]
+            type: "small"
+
+            MDTopAppBarLeadingButtonContainer:
+                MDActionTopAppBarButton:
+                    icon: "menu"
+                    on_release: app.open_drawer() if hasattr(app, "open_drawer") else None
+
+            MDTopAppBarTitle:
+                text: "FRP Pipe - Home"
+                halign: "center"
+
+            MDTopAppBarTrailingButtonContainer:
+                MDActionTopAppBarButton:
+                    icon: "wrench-cog"
+                    on_release: app.change_screen("manual")
+
+                MDActionTopAppBarButton:
+                    icon: "cog"
+                    on_release: app.change_screen("settings")
 
         MDBoxLayout:
             orientation: "vertical"
