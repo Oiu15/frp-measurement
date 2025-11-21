@@ -38,11 +38,11 @@ def app_base_dir() -> str:
 # ---- KivyMD 控件导入 ----
 from kivymd.icon_definitions import md_icons
 
-from kivymd.uix.toolbar import MDTopAppBar
+from kivymd.uix.appbar import MDTopAppBar
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel, MDIcon
-from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.button import MDButton, MDFabButton
 from kivymd.uix.slider import MDSlider
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.dropdownitem import MDDropDownItem
@@ -55,8 +55,22 @@ except ImportError:
     try:
         from kivymd.uix.list import MDSeparator  # 旧版本
     except ImportError:
-        MDSeparator = None  # 只是为了不报错，实际不在 Python 里用到
+        from kivymd.uix.divider import MDDivider  # KivyMD 2.x
+
+        class MDSeparator(MDDivider):
+            """Compat alias for removed MDSeparator."""
+            pass
 # ------------------------------------------------------------
+
+# Legacy aliases for KivyMD 1.x names
+class MDRaisedButton(MDButton):
+    """Compat alias for migrated KivyMD 2.x API."""
+    pass
+
+class MDFloatingActionButton(MDFabButton):
+    """Compat alias for migrated KivyMD 2.x API."""
+    pass
+
 
 from ui.screens import (
     HomeScreen,
@@ -72,8 +86,7 @@ class FRPHMIDemo(MDApp):
     def build(self):
         # 深色主题 + 蓝灰
         self.theme_cls.theme_style = "Dark"
-        self.theme_cls.primary_palette = "BlueGray"
-        self.theme_cls.primary_hue = "700"
+        self.theme_cls.primary_palette = "#607d8b"
 
         Window.size = (1280, 720)
 
