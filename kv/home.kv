@@ -57,12 +57,40 @@
 
                 MDCard:
                     orientation: "vertical"
-                    padding: "16dp"
                     size_hint_x: 0.5
+                    md_bg_color: 0.17, 0.19, 0.21, 1
+                    radius: [16, 16, 16, 16]
+                    padding: [12, 12, 12, 12]
+
+                    # 卡片内部标题
                     MDLabel:
                         text: "Peripheral Status"
                         halign: "center"
-                        valign: "center"
+                        size_hint_y: None
+                        height: "24dp"
+
+                    MDSeparator:
+
+                    # 真正装状态行的容器
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        padding: [0, 8, 0, 8]   # 这里控制第一行离标题/分隔线的距离
+                        spacing: "10dp"
+
+                        PeripheralStatusRow:
+                            text: "Rotary Servo"
+                        PeripheralStatusRow:
+                            text: "OD Slide"
+                        PeripheralStatusRow:
+                            text: "ID Slide"
+                        PeripheralStatusRow:
+                            text: "OD Sensor"
+                        PeripheralStatusRow:
+                            text: "ID Sensor"
+                        PeripheralStatusRow:
+                            text: "PLC"
+                        PeripheralStatusRow:
+                            text: "Core DLL"
 
             MDBoxLayout:
                 orientation: "horizontal"
