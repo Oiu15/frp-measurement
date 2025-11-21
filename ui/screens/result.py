@@ -1,6 +1,65 @@
 from kivy.metrics import dp
-from kivymd.uix.datatables import MDDataTable
+from kivy.properties import ListProperty
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.label import MDLabel
 from kivymd.uix.screen import MDScreen
+
+try:
+    from kivymd.uix.datatables import MDDataTable  # KivyMD 1.x
+except ImportError:
+    class MDDataTable(MDBoxLayout):  # Minimal fallback for KivyMD 2.x
+        column_data = ListProperty()
+        row_data = ListProperty()
+
+        def __init__(self, column_data=None, row_data=None, **kwargs):
+            kwargs.pop("use_pagination", None)
+            kwargs.pop("check", None)
+            super().__init__(orientation="vertical", spacing=dp(4), padding=dp(4), **kwargs)
+            self.header = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(32), spacing=dp(4))
+            self.body = MDBoxLayout(orientation="vertical", spacing=dp(2))
+            self.add_widget(self.header)
+            self.add_widget(self.body)
+            self.column_data = column_data or []
+            self.row_data = row_data or []
+            self._build_header()
+            self._build_rows()
+
+        def _build_header(self):
+            self.header.clear_widgets()
+            for title, width in self.column_data:
+                self.header.add_widget(
+                    MDLabel(
+                        text=title,
+                        size_hint_x=None,
+                        width=width,
+                        halign="center",
+                        theme_text_color="Secondary",
+                        bold=True,
+                    )
+                )
+
+        def _build_rows(self):
+            self.body.clear_widgets()
+            for row in self.row_data:
+                row_layout = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(28), spacing=dp(4))
+                for (title, width), cell in zip(self.column_data, row):
+                    row_layout.add_widget(
+                        MDLabel(
+                            text=str(cell),
+                            size_hint_x=None,
+                            width=width,
+                            halign="center",
+                            theme_text_color="Primary",
+                        )
+                    )
+                self.body.add_widget(row_layout)
+
+        def on_column_data(self, *args):
+            self._build_header()
+            self._build_rows()
+
+        def on_row_data(self, *args):
+            self._build_rows()
 
 
 class ResultScreen(MDScreen):
