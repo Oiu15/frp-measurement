@@ -1,10 +1,57 @@
 import os
 import sys
-
+import ctypes
 from kivy.core.window import Window
 from kivy.lang import Builder
 
 from kivymd.app import MDApp
+
+
+def get_screen_size():
+    """
+    优先用 Windows API 取物理屏幕分辨率；
+    失败时退回 Kivy 的 Window.system_size。
+    """
+    try:
+        user32 = ctypes.windll.user32
+        # 当前主屏幕分辨率（已经考虑 DPI）
+        sw = user32.GetSystemMetrics(0)  # SM_CXSCREEN
+        sh = user32.GetSystemMetrics(1)  # SM_CYSCREEN
+        if sw > 0 and sh > 0:
+            return sw, sh
+    except Exception:
+        pass
+    # 兜底：用 Kivy 的
+    return Window.system_size
+
+
+def get_titlebar_height() -> int:
+    """
+    估算窗口标题栏+边框高度，用于纵向补偿。
+    """
+    try:
+        user32 = ctypes.windll.user32
+        SM_CYCAPTION = 4  # 标题栏高度
+        SM_CYFRAME = 33  # 框架高度（大概值，实际随 DPI 变化）
+        caption = user32.GetSystemMetrics(SM_CYCAPTION)
+        frame = user32.GetSystemMetrics(SM_CYFRAME)
+        return caption + frame
+    except Exception:
+        return 32  # 兜底值
+
+
+def center_window(width: int, height: int):
+    """
+    设置窗口大小并把窗口放在屏幕正中。
+    """
+    Window.size = (width, height)
+
+    sw, sh = get_screen_size()
+    title_h = get_titlebar_height()
+
+    # 居中 + 纵向轻微下移，避免贴顶被挡
+    Window.left = int((sw - width) / 2)
+    Window.top = int((sh - height) / 2 - title_h / 2)
 
 
 def resource_path(rel_path: str) -> str:
@@ -59,16 +106,23 @@ except ImportError:
 
         class MDSeparator(MDDivider):
             """Compat alias for removed MDSeparator."""
+
             pass
+
+
 # ------------------------------------------------------------
+
 
 # Legacy aliases for KivyMD 1.x names
 class MDRaisedButton(MDButton):
     """Compat alias for migrated KivyMD 2.x API."""
+
     pass
+
 
 class MDFloatingActionButton(MDFabButton):
     """Compat alias for migrated KivyMD 2.x API."""
+
     pass
 
 
@@ -92,6 +146,10 @@ class FRPHMIDemo(MDApp):
 
         kv_file = resource_path("kv/main.kv")
         return Builder.load_file(kv_file)
+
+    def on_start(self):
+        # center_window(1280, 720)
+        Window.maximize()
 
     def go_home(self, *args):
         self.root.current = "home"
