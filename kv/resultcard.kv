@@ -1,18 +1,94 @@
 <ResultCard@MDCard>:
-    title: ""
-    value: ""
-    unit: ""
-    status_icon: "checkbox-blank-circle-outline"
-    padding: "12dp"
-    radius: [10, 10, 10, 10]
-    MDBoxLayout:
+    # 对外属性
+    title: ""              # 测量项目名称
+    current_value: ""      # 当前测量值
+    standard_value: ""     # 标准值
+    tolerance: ""          # 允许偏差
+    unit: ""               # 单位
+    status: "pending"      # "ok" / "ng" / 其他
+
+    size_hint_y: None
+    height: "180dp"
+    padding: 0
+    radius: [16, 16, 16, 16]
+    elevation: 0
+    md_bg_color: 0.08, 0.08, 0.08, 1   # 深色背景，可按需调整
+
+    canvas.after:
+        Color:
+            rgba: 0.35, 0.35, 0.35, 1
+        Line:
+            width: 1
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 16)
+
+    BoxLayout:
         orientation: "vertical"
-        spacing: "6dp"
-        MDLabel:
-            text: root.title
-            theme_text_color: "Secondary"
-        MDLabel:
-            text: root.value
-        MDLabel:
-            text: root.unit
-            theme_text_color: "Secondary"
+        padding: [12, 8, 12, 8]   # 左 上 右 下
+        spacing: "4dp"
+
+        # ───── 第一行：项目名称 + 状态（靠上） ─────
+        BoxLayout:
+            size_hint_y: None
+            height: "26dp"
+
+            Label:
+                text: root.title
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+                bold: True
+                font_size: "16sp"
+
+            Label:
+                text:
+                    "OK" if root.status == "ok" else \
+                    ("NG" if root.status == "ng" else "—")
+                halign: "right"
+                valign: "middle"
+                text_size: self.size
+                bold: True
+                font_size: "16sp"
+                color:
+                    (0, 0.8, 0, 1) if root.status == "ok" else \
+                    ((1, 0.2, 0.2, 1) if root.status == "ng" else (0.7, 0.7, 0.7, 1))
+
+        # ───── 第二行：当前值 + 单位（中间大块） ─────
+        BoxLayout:
+            size_hint_y: None
+            height: "96dp"        # ← 改这里可以明显改变中间区域高度
+            spacing: "4dp"
+
+            Label:
+                text: root.current_value
+                halign: "right"
+                valign: "middle"
+                text_size: self.size
+                font_size: "36sp"  # ← 改成 20sp / 56sp，体积会非常明显变化
+                bold: True
+
+            Label:
+                text: root.unit
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+                font_size: "18sp"
+
+        # ───── 第三行：标准值 + 偏差（靠下） ─────
+        BoxLayout:
+            size_hint_y: None
+            height: "24dp"
+            spacing: "12dp"
+
+            Label:
+                text: "Std: " + root.standard_value
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+                font_size: "12sp"
+
+            Label:
+                text: "Tol: " + root.tolerance
+                halign: "right"
+                valign: "middle"
+                text_size: self.size
+                font_size: "12sp"

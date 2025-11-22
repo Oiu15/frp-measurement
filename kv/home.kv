@@ -40,42 +40,36 @@
                     size_hint_x: 30
                     MDGridLayout:
                         cols: 3
-                        rows: 2
-                        spacing: "12dp"
-                        adaptive_height: True
-                        adaptive_width: True
-                        size_hint: 1, 1
+                        padding: "16dp"
+                        spacing: "16dp"
+                        row_force_default: True
+                        row_default_height: "180dp"   # 和 ResultCard.height 保持一致
 
                         ResultCard:
-                            id: length_card
-                            title: "Length"
-                            value: "123.4"
+                            title: "Outer Diameter"
+                            current_value: "219.998"
+                            standard_value: "220.000"
+                            tolerance: "±0.10"
                             unit: "mm"
+                            status: "ok"
+
                         ResultCard:
-                            id: od_card
-                            title: "OD"
-                            value: "100.0"
+                            title: "Inner Diameter"
+                            current_value: "152.695"
+                            standard_value: "152.700"
+                            tolerance: "±0.01"
                             unit: "mm"
+                            status: "ng"
+
                         ResultCard:
-                            id: id_card
-                            title: "ID"
-                            value: "95.0"
-                            unit: "mm"
-                        ResultCard:
-                            id: roundness_card
                             title: "Roundness"
-                            value: "0.20"
+                            current_value: "0.008"
+                            standard_value: "≤0.035"
+                            tolerance: "—"
                             unit: "mm"
-                        ResultCard:
-                            id: straightness_card
-                            title: "Straightness"
-                            value: "0.15"
-                            unit: "mm/m"
-                        ResultCard:
-                            id: concentricity_card
-                            title: "Concentricity"
-                            value: "0.10"
-                            unit: "mm"
+                            status: "ok"
+
+
 
                 MDCard:
                     orientation: "vertical"
