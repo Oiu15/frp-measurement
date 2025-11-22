@@ -58,20 +58,37 @@
             height: "96dp"        # ← 改这里可以明显改变中间区域高度
             spacing: "4dp"
 
-            Label:
-                text: root.current_value
-                halign: "right"
-                valign: "middle"
-                text_size: self.size
-                font_size: "36sp"  # ← 改成 20sp / 56sp，体积会非常明显变化
-                bold: True
+            AnchorLayout:
+                anchor_x: "center"
+                anchor_y: "center"
+                    
+                BoxLayout:
+                    size_hint: None, None
+                    height: self.minimum_height
+                    width: self.minimum_width
+                    spacing: "4dp"
 
-            Label:
-                text: root.unit
-                halign: "left"
-                valign: "middle"
-                text_size: self.size
-                font_size: "18sp"
+                    Label:
+                        text: root.current_value
+                        # ---- 关键：绝对不能加 text_size ---
+                        halign: "center"
+                        valign: "middle"
+                        font_size: "36sp"
+                        bold: True
+                        size_hint: None, None
+                        texture_size: self.texture_size
+                        width: self.texture_size[0]
+                        height: self.texture_size[1]
+
+                    Label:
+                        text: root.unit
+                        halign: "left"
+                        valign: "middle"
+                        font_size: "18sp"
+                        size_hint: None, None
+                        texture_size: self.texture_size
+                        width: self.texture_size[0]
+                        height: self.texture_size[1]
 
         # ───── 第三行：标准值 + 偏差（靠下） ─────
         BoxLayout:

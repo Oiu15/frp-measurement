@@ -40,8 +40,8 @@
                     size_hint_x: 30
                     MDGridLayout:
                         cols: 3
-                        padding: "16dp"
-                        spacing: "16dp"
+                        padding: "8dp"
+                        spacing: "8dp"
                         row_force_default: True
                         row_default_height: "180dp"   # 和 ResultCard.height 保持一致
 
@@ -69,6 +69,29 @@
                             unit: "mm"
                             status: "ok"
 
+                        ResultCard:
+                            title: "Outer Diameter"
+                            current_value: "219.998"
+                            standard_value: "220.000"
+                            tolerance: "±0.10"
+                            unit: "mm"
+                            status: "ok"
+
+                        ResultCard:
+                            title: "Inner Diameter"
+                            current_value: "152.695"
+                            standard_value: "152.700"
+                            tolerance: "±0.01"
+                            unit: "mm"
+                            status: "ng"
+
+                        ResultCard:
+                            title: "Roundness"
+                            current_value: "0.008"
+                            standard_value: "≤0.035"
+                            tolerance: "—"
+                            unit: "mm"
+                            status: "ok"
 
 
                 MDCard:
