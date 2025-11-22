@@ -1,10 +1,37 @@
+<StatusChip@BoxLayout>:
+    status: "pending"          # "ok" / "ng" / 其他
+    size_hint: None, None
+    height: "22dp"
+    width: "56dp"              # 稍微加宽一点，避免再被压得太紧
+    padding: [10, 2, 10, 2]
+    spacing: 0
+
+    canvas.before:
+        Color:
+            rgba:
+                (0, 0.7, 0, 1) if root.status == "ok" else \
+                ((1, 0.25, 0.25, 1) if root.status == "ng" else (0.5, 0.5, 0.5, 1))
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [11, 11, 11, 11]
+
+    Label:
+        text:
+            "OK" if root.status == "ok" else \
+            ("NG" if root.status == "ng" else "—")
+        font_size: "13sp"
+        bold: True
+        color: 1, 1, 1, 1
+        halign: "center"
+        valign: "middle"
+
 <ResultCard@MDCard>:
-    # 对外属性
-    title: ""              # 测量项目名称
-    current_value: ""      # 当前测量值
-    standard_value: ""     # 标准值
-    tolerance: ""          # 允许偏差
-    unit: ""               # 单位
+    title: ""
+    current_value: ""
+    standard_value: ""
+    tolerance: ""
+    unit: ""
     status: "pending"      # "ok" / "ng" / 其他
 
     size_hint_y: None
@@ -12,7 +39,7 @@
     padding: 0
     radius: [16, 16, 16, 16]
     elevation: 0
-    md_bg_color: 0.08, 0.08, 0.08, 1   # 深色背景，可按需调整
+    md_bg_color: 0.08, 0.08, 0.08, 1
 
     canvas.after:
         Color:
@@ -23,46 +50,38 @@
 
     BoxLayout:
         orientation: "vertical"
-        padding: [12, 8, 12, 8]   # 左 上 右 下
-        spacing: "4dp"
+        padding: [16, 10, 16, 10]   # 左/上/右/下，和 DoubleMetricCard 保持一致
+        spacing: "6dp"
 
-        # ───── 第一行：项目名称 + 状态（靠上） ─────
+        # 顶部：标题 + 状态胶囊
         BoxLayout:
             size_hint_y: None
             height: "26dp"
 
             Label:
                 text: root.title
+                font_size: "15sp"
+                bold: True
                 halign: "left"
                 valign: "middle"
-                text_size: self.size
-                bold: True
-                font_size: "16sp"
 
-            Label:
-                text:
-                    "OK" if root.status == "ok" else \
-                    ("NG" if root.status == "ng" else "—")
-                halign: "right"
-                valign: "middle"
-                text_size: self.size
-                bold: True
-                font_size: "16sp"
-                color:
-                    (0, 0.8, 0, 1) if root.status == "ok" else \
-                    ((1, 0.2, 0.2, 1) if root.status == "ng" else (0.7, 0.7, 0.7, 1))
+            Widget:
+                size_hint_x: 1
 
-        # ───── 第二行：当前值 + 单位（中间大块） ─────
+            StatusChip:
+                status: root.status
+
+        # 中部：大数字 + 单位（整体居中）
         BoxLayout:
             size_hint_y: None
-            height: "96dp"        # ← 改这里可以明显改变中间区域高度
-            spacing: "4dp"
+            height: "96dp"
 
             AnchorLayout:
                 anchor_x: "center"
                 anchor_y: "center"
-                    
+
                 BoxLayout:
+                    orientation: "horizontal"
                     size_hint: None, None
                     height: self.minimum_height
                     width: self.minimum_width
@@ -70,11 +89,10 @@
 
                     Label:
                         text: root.current_value
-                        # ---- 关键：绝对不能加 text_size ---
+                        font_size: "34sp"
+                        bold: True
                         halign: "center"
                         valign: "middle"
-                        font_size: "36sp"
-                        bold: True
                         size_hint: None, None
                         texture_size: self.texture_size
                         width: self.texture_size[0]
@@ -82,30 +100,134 @@
 
                     Label:
                         text: root.unit
+                        font_size: "16sp"
                         halign: "left"
                         valign: "middle"
-                        font_size: "18sp"
                         size_hint: None, None
                         texture_size: self.texture_size
                         width: self.texture_size[0]
                         height: self.texture_size[1]
 
-        # ───── 第三行：标准值 + 偏差（靠下） ─────
+        # 底部：Std / Tol，小字行左右对齐
         BoxLayout:
             size_hint_y: None
-            height: "24dp"
+            height: "26dp"
             spacing: "12dp"
 
             Label:
                 text: "Std: " + root.standard_value
+                font_size: "12sp"
                 halign: "left"
                 valign: "middle"
-                text_size: self.size
-                font_size: "12sp"
+
+            Widget:
+                size_hint_x: 1
 
             Label:
                 text: "Tol: " + root.tolerance
+                font_size: "12sp"
                 halign: "right"
                 valign: "middle"
-                text_size: self.size
+
+<DoubleMetricCard@MDCard>:
+    title: ""              # 卡片标题，例如 "Outer Diameter"
+    main_value: ""         # 主指标数值
+    main_unit: ""          # 主指标单位
+    main_status: "pending" # 主指标状态
+
+    sub_label: ""          # 次指标名称，例如 "Roundness"
+    sub_value: ""          # 次指标数值
+    sub_unit: ""           # 次指标单位
+    sub_status: "pending"  # 次指标状态
+
+    size_hint_y: None
+    height: "200dp"
+    padding: 0
+    radius: [16, 16, 16, 16]
+    elevation: 0
+    md_bg_color: 0.08, 0.08, 0.08, 1
+
+    canvas.after:
+        Color:
+            rgba: 0.35, 0.35, 0.35, 1
+        Line:
+            width: 1
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 16)
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: [16, 10, 16, 10]   # 和 ResultCard 对齐
+        spacing: "6dp"
+
+        # 顶部：标题 + 主状态
+        BoxLayout:
+            size_hint_y: None
+            height: "26dp"
+
+            Label:
+                text: root.title
+                font_size: "15sp"
+                bold: True
+                halign: "left"
+                valign: "middle"
+
+            Widget:
+                size_hint_x: 1
+
+            StatusChip:
+                status: root.main_status
+
+        # 中部：主指标大数字（与 ResultCard 对齐）
+        BoxLayout:
+            size_hint_y: None
+            height: "100dp"
+
+            AnchorLayout:
+                anchor_x: "center"
+                anchor_y: "center"
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint: None, None
+                    height: self.minimum_height
+                    width: self.minimum_width
+                    spacing: "4dp"
+
+                    Label:
+                        text: root.main_value
+                        font_size: "34sp"
+                        bold: True
+                        halign: "center"
+                        valign: "middle"
+                        size_hint: None, None
+                        texture_size: self.texture_size
+                        width: self.texture_size[0]
+                        height: self.texture_size[1]
+
+                    Label:
+                        text: root.main_unit
+                        font_size: "16sp"
+                        halign: "left"
+                        valign: "middle"
+                        size_hint: None, None
+                        texture_size: self.texture_size
+                        width: self.texture_size[0]
+                        height: self.texture_size[1]
+
+        # 底部：次指标 + 状态（和 ResultCard 底部左对齐）
+        BoxLayout:
+            size_hint_y: None
+            height: "26dp"
+            spacing: "8dp"
+
+            Label:
+                text: root.sub_label + ": " + root.sub_value + root.sub_unit
                 font_size: "12sp"
+                halign: "left"
+                valign: "middle"
+
+            Widget:
+                size_hint_x: 1
+
+            StatusChip:
+                status: root.sub_status
