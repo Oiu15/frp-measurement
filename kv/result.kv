@@ -14,8 +14,13 @@
                     on_release: app.change_screen("home")
 
             MDTopAppBarTitle:
-                text: "Result"
+                text: app.i18n.current_lang and app._("result_title")
                 halign: "center"
+
+            MDTopAppBarTrailingButtonContainer:
+                MDActionTopAppBarButton:
+                    icon: "translate"
+                    on_release: app.toggle_language()
 
         MDBoxLayout:
             orientation: "vertical"
@@ -28,12 +33,12 @@
                 radius: dp(12)
                 md_bg_color: 0.08, 0.08, 0.08, 1
                 MDLabel:
-                    text: "Measurement Report"
+                    text: app.i18n.current_lang and app._("result_report_title")
                     theme_text_color: "Secondary"
                     padding_y: dp(4)
                 MDSeparator:
                 MDBoxLayout:
-                    id: result_table_container   # 在 Python 里会拿这个 id
+                    id: result_table_container
                     orientation: "vertical"
 
             # 下面可以保留简单的结果总结
@@ -44,7 +49,7 @@
 
                 MDLabel:
                     id: res_ok_label
-                    text: "OK"
+                    text: app.i18n.current_lang and app._("common_ok")
                     theme_text_color: "Custom"
                     text_color: (0, 1, 0, 1)
 

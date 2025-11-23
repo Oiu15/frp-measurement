@@ -18,8 +18,10 @@
 
     Label:
         text:
-            "OK" if root.status == "ok" else \
-            ("NG" if root.status == "ng" else "—")
+            app.i18n.current_lang and (
+            app._("common_ok") if root.status == "ok" else
+            (app._("common_ng") if root.status == "ng" else app._("common_unknown"))
+            )
         font_size: "13sp"
         bold: True
         color: 1, 1, 1, 1
@@ -50,7 +52,7 @@
 
     BoxLayout:
         orientation: "vertical"
-        padding: [16, 10, 16, 10]   # 左/上/右/下，和 DoubleMetricCard 保持一致
+        padding: [16, 10, 16, 10]
         spacing: "6dp"
 
         # 顶部：标题 + 状态胶囊
@@ -115,7 +117,7 @@
             spacing: "12dp"
 
             Label:
-                text: "Std: " + root.standard_value
+                text: (app._("common_std_prefix") if app.i18n.current_lang else "") + root.standard_value
                 font_size: "12sp"
                 halign: "left"
                 valign: "middle"
@@ -124,22 +126,20 @@
                 size_hint_x: 1
 
             Label:
-                text: "Tol: " + root.tolerance
+                text: (app._("common_tol_prefix") if app.i18n.current_lang else "") + root.tolerance
                 font_size: "12sp"
                 halign: "right"
                 valign: "middle"
 
 <DoubleMetricCard@MDCard>:
-    title: ""              # 卡片标题，例如 "Outer Diameter"
+    title: ""              # 卡片标题，例："Outer Diameter"
     main_value: ""         # 主指标数值
     main_unit: ""          # 主指标单位
     main_status: "pending" # 主指标状态
-
-    sub_label: ""          # 次指标名称，例如 "Roundness"
+    sub_label: ""          # 次指标名称
     sub_value: ""          # 次指标数值
     sub_unit: ""           # 次指标单位
     sub_status: "pending"  # 次指标状态
-
     size_hint_y: None
     height: "200dp"
     padding: 0
@@ -156,7 +156,7 @@
 
     BoxLayout:
         orientation: "vertical"
-        padding: [16, 10, 16, 10]   # 和 ResultCard 对齐
+        padding: [16, 10, 16, 10]
         spacing: "6dp"
 
         # 顶部：标题 + 主状态
@@ -177,7 +177,7 @@
             StatusChip:
                 status: root.main_status
 
-        # 中部：主指标大数字（与 ResultCard 对齐）
+        # 中部：主指标大数字
         BoxLayout:
             size_hint_y: None
             height: "100dp"
@@ -214,14 +214,14 @@
                         width: self.texture_size[0]
                         height: self.texture_size[1]
 
-        # 底部：次指标 + 状态（和 ResultCard 底部左对齐）
+        # 底部：次指标 + 状态
         BoxLayout:
             size_hint_y: None
             height: "26dp"
             spacing: "8dp"
 
             Label:
-                text: root.sub_label + ": " + root.sub_value + root.sub_unit
+                text: "{}: {}{}".format(root.sub_label, root.sub_value, root.sub_unit)
                 font_size: "12sp"
                 halign: "left"
                 valign: "middle"

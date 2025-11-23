@@ -5,7 +5,7 @@
     MDGridLayout:
         cols: 2
         adaptive_height: True
-        spacing: "24dp"     
+        spacing: "24dp"
 
         # ================= 左栏：系统 + 通讯 =================
         MDBoxLayout:
@@ -15,7 +15,7 @@
 
             # --- System ---
             MDLabel:
-                text: "System"
+                text: app.i18n.current_lang and app._("status_system_title")
                 font_style: "Title"
                 role: "small"
                 bold: True
@@ -26,13 +26,13 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "System State"
+                    text: app.i18n.current_lang and app._("status_system_state")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: self.texture_size[1]
                 MDLabel:
                     id: system_state_value
-                    text: "Ready"
+                    text: app.i18n.current_lang and app._("status_system_ready")
                     halign: "right"
                     size_hint_y: None
                     height: self.texture_size[1]
@@ -40,13 +40,13 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "Mode"
+                    text: app.i18n.current_lang and app._("status_mode")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: self.texture_size[1]
                 MDLabel:
                     id: system_mode_value
-                    text: "Auto"
+                    text: app.i18n.current_lang and app._("status_mode_auto")
                     halign: "right"
                     size_hint_y: None
                     height: self.texture_size[1]
@@ -54,7 +54,7 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "Runtime"
+                    text: app.i18n.current_lang and app._("status_runtime")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: self.texture_size[1]
@@ -67,7 +67,7 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "Current Recipe"
+                    text: app.i18n.current_lang and app._("status_recipe")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: self.texture_size[1]
@@ -81,25 +81,25 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "Last Result"
+                    text: app.i18n.current_lang and app._("status_last_result")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: self.texture_size[1]
                 MDLabel:
                     id: system_last_result_value
-                    text: "OK"
+                    text: app._("common_ok") if app.lang else ""
                     halign: "right"
                     size_hint_y: None
                     height: self.texture_size[1]
 
-            # 间隔一点，让 System 与 Communication 视觉上分开
+            # 间隔一点，�?System �?Communication 视觉上分开
             Widget:
                 size_hint_y: None
                 height: "8dp"
 
             # --- Communication ---
             MDLabel:
-                text: "Communication"
+                text: app.i18n.current_lang and app._("status_communication_title")
                 font_style: "Title"
                 role: "small"
                 bold: True
@@ -107,29 +107,29 @@
                 size_hint_y: None
                 height: self.texture_size[1]
 
-            # 单行显示，将来可以加滚动效果的那一行
+            # 单行显示，将来可以加滚动效果的那一�?
             MDBoxLayout:
                 size_hint_y: None
                 height: "24dp"
 
                 MDLabel:
                     id: comm_status_value
-                    text: "All links online"
-                    # 正常时用主题颜色，错误时在 Python 里改成红色
+                    text: app.i18n.current_lang and app._("status_all_online")
+                    # 正常时用主题颜色，错误时�?Python 里改成红�?
                     theme_text_color: "Custom"
                     text_color: app.theme_cls.primaryColor
                     halign: "left"
-                    shorten: True        # 超出宽度时先用 shorten，之后再做滚动动画
+                    shorten: True        # 超出宽度时先�?shorten，之后再做滚动动�?
                     shorten_from: "right"
 
-        # ================= 右栏：测量 =================
+        # ================= 右栏：测�?=================
         MDBoxLayout:
             orientation: "vertical"
             spacing: "4dp"
             adaptive_height: True
 
             MDLabel:
-                text: "Measurement"
+                text: app.i18n.current_lang and app._("status_measurement_title")
                 font_style: "Title"
                 role: "small"
                 bold: True
@@ -140,13 +140,13 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "State"
+                    text: app.i18n.current_lang and app._("status_state")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: self.texture_size[1]
                 MDLabel:
                     id: meas_state_value
-                    text: "Idle"
+                    text: app.i18n.current_lang and app._("status_idle")
                     halign: "right"
                     size_hint_y: None
                     height: self.texture_size[1]
@@ -154,13 +154,13 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "Current Step"
+                    text: app.i18n.current_lang and app._("status_current_step")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: self.texture_size[1]
                 MDLabel:
                     id: meas_step_value
-                    text: "-"
+                    text: app.i18n.current_lang and app._("status_dash")
                     halign: "right"
                     shorten: True
                     shorten_from: "left"
@@ -170,7 +170,7 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "Last Measure Time"
+                    text: app.i18n.current_lang and app._("status_last_time")
                     theme_text_color: "Secondary"
                     size_hint_y: None  
                     height: self.texture_size[1]
@@ -184,7 +184,7 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "Average Measure Time"
+                    text: app.i18n.current_lang and app._("status_avg_time")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: self.texture_size[1]
@@ -198,7 +198,7 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "Part Count"
+                    text: app.i18n.current_lang and app._("status_part_count")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: self.texture_size[1]
@@ -212,7 +212,7 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "NG Count"
+                    text: app.i18n.current_lang and app._("status_ng_count")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: self.texture_size[1]
@@ -225,13 +225,13 @@
             MDBoxLayout:
                 adaptive_height: True
                 MDLabel:
-                    text: "Last NG Reason"
+                    text: app.i18n.current_lang and app._("status_last_ng_reason")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: self.texture_size[1]
                 MDLabel:
                     id: meas_last_ng_reason_value
-                    text: "-"
+                    text: app._("status_dash") if app.lang else ""
                     halign: "right"
                     shorten: True
                     shorten_from: "left"

@@ -12,7 +12,7 @@
                     on_release: app.open_drawer() if hasattr(app, "open_drawer") else None
 
             MDTopAppBarTitle:
-                text: "FRP Pipe - Home"
+                text: app.i18n.current_lang and app._("home_title")
                 halign: "center"
 
             MDTopAppBarTrailingButtonContainer:
@@ -23,6 +23,10 @@
                 MDActionTopAppBarButton:
                     icon: "cog"
                     on_release: app.change_screen("settings")
+
+                MDActionTopAppBarButton:
+                    icon: "translate"
+                    on_release: app.toggle_language()
 
         MDBoxLayout:
             orientation: "vertical"
@@ -50,23 +54,23 @@
                             spacing: "8dp"
 
                             DoubleMetricCard:
-                                title: "Outer Diameter"
+                                title: app._("home_card_outer_title") if app.lang else ""
                                 main_value: "219.998"
-                                main_unit: "mm"
+                                main_unit: app._("common_unit_mm") if app.lang else ""
                                 main_status: "ok"
-                                sub_label: "Roundness"
+                                sub_label: app._("home_roundness") if app.lang else ""
                                 sub_value: "0.008"
-                                sub_unit: "mm"
+                                sub_unit: app._("common_unit_mm") if app.lang else ""
                                 sub_status: "ok"
 
                             DoubleMetricCard:
-                                title: "Inner Diameter"
+                                title: app._("home_card_inner_title") if app.lang else ""
                                 main_value: "152.695"
-                                main_unit: "mm"
+                                main_unit: app._("common_unit_mm") if app.lang else ""
                                 main_status: "ng"
-                                sub_label: "Roundness"
+                                sub_label: app._("home_roundness") if app.lang else ""
                                 sub_value: "0.012"
-                                sub_unit: "mm"
+                                sub_unit: app._("common_unit_mm") if app.lang else ""
                                 sub_status: "ng"
 
                         # 下排：长度 / 直线度 / 同心度
@@ -76,28 +80,28 @@
                             spacing: "8dp"
 
                             ResultCard:
-                                title: "Length"
+                                title: app._("home_length") if app.lang else ""
                                 current_value: "1802.3"
-                                unit: "mm"
+                                unit: app._("common_unit_mm") if app.lang else ""
                                 status: "ok"
                                 standard_value: "1800.0"
                                 tolerance: "±5.0"
 
                             ResultCard:
-                                title: "Straightness"
+                                title: app._("home_straightness") if app.lang else ""
                                 current_value: "0.021"
-                                unit: "mm"
+                                unit: app._("common_unit_mm") if app.lang else ""
                                 status: "ok"
-                                standard_value: "≤0.050"
-                                tolerance: "—"
+                                standard_value: "0.050"
+                                tolerance: "±0.050"
 
                             ResultCard:
-                                title: "Concentricity"
+                                title: app._("home_concentricity") if app.lang else ""
                                 current_value: "0.012"
-                                unit: "mm"
+                                unit: app._("common_unit_mm") if app.lang else ""
                                 status: "ng"
-                                standard_value: "≤0.010"
-                                tolerance: "—"
+                                standard_value: "0.010"
+                                tolerance: "±0.010"
 
                 MDCard:
                     orientation: "vertical"
@@ -108,7 +112,7 @@
 
                     # 卡片内部标题
                     MDLabel:
-                        text: "Peripheral Status"
+                        text: app.i18n.current_lang and app._("home_peripheral_status_title")
                         halign: "center"
                         size_hint_y: None
                         height: "24dp"
@@ -122,19 +126,19 @@
                         spacing: "10dp"
 
                         PeripheralStatusRow:
-                            text: "Rotary Servo"
+                            text: app.i18n.current_lang and app._("home_peripheral_rotary_servo")
                         PeripheralStatusRow:
-                            text: "OD Slide"
+                            text: app.i18n.current_lang and app._("home_peripheral_od_slide")
                         PeripheralStatusRow:
-                            text: "ID Slide"
+                            text: app.i18n.current_lang and app._("home_peripheral_id_slide")
                         PeripheralStatusRow:
-                            text: "OD Sensor"
+                            text: app.i18n.current_lang and app._("home_peripheral_od_sensor")
                         PeripheralStatusRow:
-                            text: "ID Sensor"
+                            text: app.i18n.current_lang and app._("home_peripheral_id_sensor")
                         PeripheralStatusRow:
-                            text: "PLC"
+                            text: app.i18n.current_lang and app._("home_peripheral_plc")
                         PeripheralStatusRow:
-                            text: "Core DLL"
+                            text: app.i18n.current_lang and app._("home_peripheral_core_dll")
 
             MDBoxLayout:
                 orientation: "horizontal"
@@ -156,4 +160,3 @@
                     size_hint_x: 15
                     size_hint_y: None
                     height: "260dp"
-

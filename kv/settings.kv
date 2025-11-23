@@ -14,8 +14,13 @@
                     on_release: app.change_screen("home")
 
             MDTopAppBarTitle:
-                text: "Settings"
+                text: app.i18n.current_lang and app._("settings_title")
                 halign: "center"
+
+            MDTopAppBarTrailingButtonContainer:
+                MDActionTopAppBarButton:
+                    icon: "translate"
+                    on_release: app.toggle_language()
 
         MDBoxLayout:
             orientation: "vertical"
@@ -23,18 +28,18 @@
 
             MDTextField:
                 id: plc_ip_field
-                hint_text: "PLC IP Address"
+                hint_text: app.i18n.current_lang and app._("settings_plc_ip_hint")
                 text: "192.168.0.10"
 
             MDTextField:
                 id: plc_port_field
-                hint_text: "PLC Port"
+                hint_text: app.i18n.current_lang and app._("settings_plc_port_hint")
                 text: "502"
                 input_filter: "int"
 
             MDTextField:
                 id: samples_field
-                hint_text: "Samples per revolution"
+                hint_text: app.i18n.current_lang and app._("settings_samples_hint")
                 text: "180"
                 input_filter: "int"
 
@@ -46,5 +51,5 @@
 
             Widget:
             MDRaisedButton:
-                text: "Apply"
+                text: app.i18n.current_lang and app._("settings_apply")
                 on_release: root.on_apply_button()

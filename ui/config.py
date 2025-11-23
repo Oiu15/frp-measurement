@@ -24,6 +24,7 @@ DEFAULT_CONFIG = {
     "plc_ip": "192.168.0.10",
     "plc_port": 502,
     "samples_per_rev": 180,
+    "lang": "en_US",
 }
 
 

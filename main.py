@@ -1,8 +1,11 @@
-import os
+﻿import os
 import sys
 import ctypes
 from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.properties import StringProperty
+from kivy.core.text import LabelBase
+from kivy.resources import resource_add_path
 
 from kivymd.app import MDApp
 
@@ -69,6 +72,19 @@ def resource_path(rel_path: str) -> str:
     return os.path.join(base_path, rel_path)
 
 
+def register_fonts():
+    """Register bundled Chinese fonts."""
+    fonts_dir = resource_path("assets/fonts")
+    resource_add_path(fonts_dir)
+    LabelBase.register(
+        name="MSYH",
+        fn_regular="msyh.ttc",
+        fn_bold="msyhbd.ttc",
+        # Kivy does not have a dedicated light slot; map light to italic for compatibility.
+        fn_italic="msyhl.ttc",
+    )
+
+
 def app_base_dir() -> str:
     """
     应用“外部文件”的基准目录：
@@ -84,7 +100,9 @@ def app_base_dir() -> str:
 
 # ---- KivyMD 控件导入 ----
 from kivymd.icon_definitions import md_icons
-
+from kivymd.font_definitions import theme_font_styles
+from pathlib import Path
+from kivy.metrics import sp
 from kivymd.uix.appbar import MDTopAppBar
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.card import MDCard
@@ -94,6 +112,8 @@ from kivymd.uix.slider import MDSlider
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.dropdownitem import MDDropDownItem
 from kivymd.uix.menu import MDDropdownMenu
+from i18n import I18N
+from ui.config import load_config, save_config
 
 # MDSeparator 兼容处理
 try:
@@ -137,10 +157,36 @@ from ui.screens import (
 
 
 class FRPHMIDemo(MDApp):
+    lang = StringProperty("zh_CN")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        register_fonts()
+        self.config_data = load_config()
+        self.lang = self.config_data.get("lang", "zh_CN")
+        locales_dir = resource_path("locales")
+        self.i18n = I18N(locales_dir, default_lang=self.lang, fallback_lang="zh_CN")
+
     def build(self):
         # 深色主题 + 蓝灰
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "#607d8b"
+
+        fonts_dir = Path(__file__).parent / "assets" / "fonts"
+        resource_add_path(str(fonts_dir))
+
+        LabelBase.register(
+            name="msyh",
+            fn_regular=str(fonts_dir / "msyh.ttc"),
+            fn_bold=str(fonts_dir / "msyhbd.ttc"),
+        )
+
+        for style in theme_font_styles:
+            if style == "Icon":
+                continue  # 图标用自己的图标字体，别动它
+
+            for role in theme_font_styles[style]:
+                theme_font_styles[style][role]["font-name"] = "MSYH"
 
         Window.size = (1280, 720)
 
@@ -158,6 +204,27 @@ class FRPHMIDemo(MDApp):
 
     def go_home(self, *args):
         self.root.current = "home"
+
+    def _(self, key: str, **kwargs):
+        return self.i18n.translate(key, **kwargs)
+
+    def toggle_language(self):
+        """Toggle between zh_CN and en_US, then refresh UI text."""
+        new_lang = "en_US" if self.lang == "zh_CN" else "zh_CN"
+        self.lang = new_lang
+        self.i18n.set_lang(new_lang)
+        self.config_data["lang"] = new_lang
+        save_config(self.config_data)
+
+        if self.root:
+            for screen_name in self.root.screen_names:
+                screen = self.root.get_screen(screen_name)
+                refresh_texts = getattr(screen, "refresh_texts", None)
+                refresh_lang = getattr(screen, "refresh_language", None)
+                if callable(refresh_texts):
+                    refresh_texts()
+                elif callable(refresh_lang):
+                    refresh_lang()
 
 
 if __name__ == "__main__":

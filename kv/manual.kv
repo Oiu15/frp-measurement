@@ -12,8 +12,13 @@
                     on_release: app.change_screen("home")
 
             MDTopAppBarTitle:
-                text: "FRP Pipe - Manual"
+                text: app.i18n.current_lang and app._("manual_title")
                 halign: "center"
+
+            MDTopAppBarTrailingButtonContainer:
+                MDActionTopAppBarButton:
+                    icon: "translate"
+                    on_release: app.toggle_language()
 
         MDBoxLayout:
             orientation: "horizontal"
@@ -29,14 +34,14 @@
                 md_bg_color: 0.17, 0.19, 0.21, 1
 
                 MDLabel:
-                    text: "Linear Axes"
+                    text: app.i18n.current_lang and app._("manual_linear_axes")
                     theme_text_color: "Secondary"
 
                 Widget:
                     size_hint_y: 0.03
 
                 MDLabel:
-                    text: "Step (mm)"
+                    text: app.i18n.current_lang and app._("manual_step_mm")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: dp(24)
@@ -57,7 +62,7 @@
 
                     MDLabel:
                         id: linear_step_label
-                        text: "0.5 mm"
+                        text: "{:0.1f} {}".format(root.linear_step_mm, app._('common_unit_mm') if app.lang else "")
                         theme_text_color: "Secondary"
                         size_hint_x: None
                         width: dp(80)
@@ -67,7 +72,7 @@
 
                 # ---- 外径滑台 ----
                 MDLabel:
-                    text: "OD Slide"
+                    text: app.i18n.current_lang and app._("manual_od_slide")
                     theme_text_color: "Secondary"
 
                 MDBoxLayout:
@@ -77,20 +82,20 @@
                     height: dp(40)
 
                     MDRaisedButton:
-                        text: "OD-"
+                        text: app.i18n.current_lang and app._("manual_button_od_neg")
                         on_release: root.jog_od_neg()
 
                     MDRaisedButton:
-                        text: "OD+"
+                        text: app.i18n.current_lang and app._("manual_button_od_pos")
                         on_release: root.jog_od_pos()
 
                     MDRaisedButton:
-                        text: "Home"
+                        text: app.i18n.current_lang and app._("manual_button_home")
                         on_release: root.home_od()
 
                     MDLabel:
                         id: od_pos_label
-                        text: "0.0 mm"
+                        text: "0.0 {}".format(app._('common_unit_mm') if app.lang else "")
                         theme_text_color: "Custom"
                         halign: "right"
 
@@ -99,7 +104,7 @@
 
                 # ---- 内径滑台 ----
                 MDLabel:
-                    text: "ID Slide"
+                    text: app.i18n.current_lang and app._("manual_id_slide")
                     theme_text_color: "Secondary"
 
                 MDBoxLayout:
@@ -109,20 +114,20 @@
                     height: dp(40)
 
                     MDRaisedButton:
-                        text: "ID-"
+                        text: app.i18n.current_lang and app._("manual_button_id_neg")
                         on_release: root.jog_id_neg()
 
                     MDRaisedButton:
-                        text: "ID+"
+                        text: app.i18n.current_lang and app._("manual_button_id_pos")
                         on_release: root.jog_id_pos()
 
                     MDRaisedButton:
-                        text: "Home"
+                        text: app.i18n.current_lang and app._("manual_button_home")
                         on_release: root.home_id()
 
                     MDLabel:
                         id: id_pos_label
-                        text: "0.0 mm"
+                        text: "0.0 {}".format(app._('common_unit_mm') if app.lang else "")
                         theme_text_color: "Custom"
                         halign: "right"
 
@@ -131,7 +136,7 @@
 
                 # ---- 内径测头伸缩 ----
                 MDLabel:
-                    text: "ID Head Extend"
+                    text: app.i18n.current_lang and app._("manual_id_head_extend")
                     theme_text_color: "Secondary"
 
                 MDBoxLayout:
@@ -141,20 +146,20 @@
                     height: dp(40)
 
                     MDRaisedButton:
-                        text: "In"
+                        text: app.i18n.current_lang and app._("manual_button_in")
                         on_release: root.jog_head_in()
 
                     MDRaisedButton:
-                        text: "Out"
+                        text: app.i18n.current_lang and app._("manual_button_out")
                         on_release: root.jog_head_out()
 
                     MDRaisedButton:
-                        text: "Home"
+                        text: app.i18n.current_lang and app._("manual_button_home")
                         on_release: root.home_head()
 
                     MDLabel:
                         id: head_pos_label
-                        text: "0.0 mm"
+                        text: "0.0 {}".format(app._('common_unit_mm') if app.lang else "")
                         theme_text_color: "Custom"
                         halign: "right"
 
@@ -167,14 +172,14 @@
                 md_bg_color: 0.17, 0.19, 0.21, 1
 
                 MDLabel:
-                    text: "Rotary Axes"
+                    text: app.i18n.current_lang and app._("manual_rotary_axes")
                     theme_text_color: "Secondary"
 
                 Widget:
                     size_hint_y: 0.03
 
                 MDLabel:
-                    text: "Step (deg)"
+                    text: app.i18n.current_lang and app._("manual_step_deg")
                     theme_text_color: "Secondary"
                     size_hint_y: None
                     height: dp(24)
@@ -195,7 +200,7 @@
 
                     MDLabel:
                         id: rot_step_label
-                        text: "5.0 °"
+                        text: "{:0.1f} {}".format(root.rotary_step_deg, app._('common_unit_deg') if app.lang else "")
                         theme_text_color: "Secondary"
                         size_hint_x: None
                         width: dp(80)
@@ -205,7 +210,7 @@
 
                 # ---- 主旋转电机 ----
                 MDLabel:
-                    text: "Main Pipe Rotate"
+                    text: app.i18n.current_lang and app._("manual_main_pipe_rotate")
                     theme_text_color: "Secondary"
 
                 MDBoxLayout:
@@ -215,20 +220,20 @@
                     height: dp(40)
 
                     MDRaisedButton:
-                        text: "CCW"
+                        text: app.i18n.current_lang and app._("manual_button_ccw")
                         on_release: root.jog_main_ccw()
 
                     MDRaisedButton:
-                        text: "CW"
+                        text: app.i18n.current_lang and app._("manual_button_cw")
                         on_release: root.jog_main_cw()
 
                     MDRaisedButton:
-                        text: "Home"
+                        text: app.i18n.current_lang and app._("manual_button_home")
                         on_release: root.home_main_rot()
 
                     MDLabel:
                         id: main_angle_label
-                        text: "0.0 °"
+                        text: "0.0 {}".format(app._('common_unit_deg') if app.lang else "")
                         theme_text_color: "Custom"
                         halign: "right"
 
@@ -237,7 +242,7 @@
 
                 # ---- 从旋转电机 ----
                 MDLabel:
-                    text: "Aux Rotate"
+                    text: app.i18n.current_lang and app._("manual_aux_rotate")
                     theme_text_color: "Secondary"
 
                 MDBoxLayout:
@@ -247,19 +252,19 @@
                     height: dp(40)
 
                     MDRaisedButton:
-                        text: "CCW"
+                        text: app.i18n.current_lang and app._("manual_button_ccw")
                         on_release: root.jog_aux_ccw()
 
                     MDRaisedButton:
-                        text: "CW"
+                        text: app.i18n.current_lang and app._("manual_button_cw")
                         on_release: root.jog_aux_cw()
 
                     MDRaisedButton:
-                        text: "Home"
+                        text: app.i18n.current_lang and app._("manual_button_home")
                         on_release: root.home_aux_rot()
 
                     MDLabel:
                         id: aux_angle_label
-                        text: "0.0 °"
+                        text: "0.0 {}".format(app._('common_unit_deg') if app.lang else "")
                         theme_text_color: "Custom"
                         halign: "right"

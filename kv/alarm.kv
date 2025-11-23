@@ -12,8 +12,13 @@
                     on_release: app.change_screen("home")
 
             MDTopAppBarTitle:
-                text: "FRP Pipe - Alarms"
+                text: app.i18n.current_lang and app._("alarm_title")
                 halign: "center"
+
+            MDTopAppBarTrailingButtonContainer:
+                MDActionTopAppBarButton:
+                    icon: "translate"
+                    on_release: app.toggle_language()
 
         MDBoxLayout:
             padding: "24dp"
@@ -25,5 +30,5 @@
                 md_bg_color: 0.17, 0.19, 0.21, 1
 
                 MDLabel:
-                    text: "Alarm List (TODO)"
+                    text: app.i18n.current_lang and app._("alarm_list_title")
                     theme_text_color: "Secondary"

@@ -13,14 +13,26 @@ class MeasureStep(Enum):
     ERROR = auto()
 
 
-STEP_LABELS = {
-    MeasureStep.IDLE: "Idle",
-    MeasureStep.ZERO_PROBE: "Zero Probe",
-    MeasureStep.LOCATE_EDGE1: "Locate Edge 1",
-    MeasureStep.LOCATE_EDGE2: "Locate Edge 2",
-    MeasureStep.MOVE_TO_SECTION: "Move To Section",
-    MeasureStep.ROTATE_MEASURE: "Rotate & Acquire",
-    MeasureStep.NEXT_SECTION: "Next Section",
-    MeasureStep.FINISHED: "Finished",
-    MeasureStep.ERROR: "Error",
+STEP_LABEL_KEYS = {
+    MeasureStep.IDLE: "flow_step_idle",
+    MeasureStep.ZERO_PROBE: "flow_step_zero_probe",
+    MeasureStep.LOCATE_EDGE1: "flow_step_locate_edge1",
+    MeasureStep.LOCATE_EDGE2: "flow_step_locate_edge2",
+    MeasureStep.MOVE_TO_SECTION: "flow_step_move_to_section",
+    MeasureStep.ROTATE_MEASURE: "flow_step_rotate_measure",
+    MeasureStep.NEXT_SECTION: "flow_step_next_section",
+    MeasureStep.FINISHED: "flow_step_finished",
+    MeasureStep.ERROR: "flow_step_error",
 }
+
+
+def get_step_label(step):
+    """Translate step to localized label if app is available."""
+    try:
+        from kivymd.app import MDApp
+
+        app = MDApp.get_running_app()
+        key = STEP_LABEL_KEYS.get(step, "flow_step_idle")
+        return app._(key)
+    except Exception:
+        return STEP_LABEL_KEYS.get(step, "flow_step_idle")

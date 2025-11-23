@@ -1,4 +1,5 @@
 from kivy.properties import NumericProperty
+from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 
 from logic.models import global_state
@@ -35,24 +36,31 @@ class ManualScreen(MDScreen):
         ids = self.ids
         # 位置显示
         if "od_pos_label" in ids:
-            ids.od_pos_label.text = f"{live.od_slide_mm:0.1f} mm"
+            unit = MDApp.get_running_app()._("common_unit_mm")
+            ids.od_pos_label.text = f"{live.od_slide_mm:0.1f} {unit}"
         if "id_pos_label" in ids:
-            ids.id_pos_label.text = f"{live.id_slide_mm:0.1f} mm"
+            unit = MDApp.get_running_app()._("common_unit_mm")
+            ids.id_pos_label.text = f"{live.id_slide_mm:0.1f} {unit}"
         if "head_pos_label" in ids:
-            ids.head_pos_label.text = f"{live.id_head_mm:0.1f} mm"
+            unit = MDApp.get_running_app()._("common_unit_mm")
+            ids.head_pos_label.text = f"{live.id_head_mm:0.1f} {unit}"
         if "main_angle_label" in ids:
-            ids.main_angle_label.text = f"{live.pipe_angle_deg:0.1f} °"
+            unit = MDApp.get_running_app()._("common_unit_deg")
+            ids.main_angle_label.text = f"{live.pipe_angle_deg:0.1f} {unit}"
         if "aux_angle_label" in ids:
-            ids.aux_angle_label.text = f"{live.aux_angle_deg:0.1f} °"
+            unit = MDApp.get_running_app()._("common_unit_deg")
+            ids.aux_angle_label.text = f"{live.aux_angle_deg:0.1f} {unit}"
 
         # 步距显示 & slider
         if "linear_step_label" in ids:
-            ids.linear_step_label.text = f"{self.linear_step_mm:0.1f} mm"
+            unit = MDApp.get_running_app()._("common_unit_mm")
+            ids.linear_step_label.text = f"{self.linear_step_mm:0.1f} {unit}"
         if "linear_step_slider" in ids:
             ids.linear_step_slider.value = self.linear_step_mm * 10
 
         if "rot_step_label" in ids:
-            ids.rot_step_label.text = f"{self.rotary_step_deg:0.1f} °"
+            unit = MDApp.get_running_app()._("common_unit_deg")
+            ids.rot_step_label.text = f"{self.rotary_step_deg:0.1f} {unit}"
         if "rot_step_slider" in ids:
             ids.rot_step_slider.value = self.rotary_step_deg
 
@@ -75,7 +83,8 @@ class ManualScreen(MDScreen):
         }
         lbl_id = mapping.get(attr_name)
         if lbl_id and lbl_id in ids:
-            ids[lbl_id].text = f"{pos:0.1f} mm"
+            unit = MDApp.get_running_app()._("common_unit_mm")
+            ids[lbl_id].text = f"{pos:0.1f} {unit}"
 
         # TODO: 这里连 PLC 直线运动命令
 
@@ -97,7 +106,8 @@ class ManualScreen(MDScreen):
         }
         lbl_id = mapping.get(attr_name)
         if lbl_id and lbl_id in ids:
-            ids[lbl_id].text = f"{ang:0.1f} °"
+            unit = MDApp.get_running_app()._("common_unit_deg")
+            ids[lbl_id].text = f"{ang:0.1f} {unit}"
 
         # TODO: 这里连 PLC 旋转命令
 
@@ -127,20 +137,23 @@ class ManualScreen(MDScreen):
         live = global_state.live
         live.od_slide_mm = 0.0
         if "od_pos_label" in self.ids:
-            self.ids.od_pos_label.text = "0.0 mm"
+            unit = MDApp.get_running_app()._("common_unit_mm")
+            self.ids.od_pos_label.text = f"0.0 {unit}"
         # TODO: PLC Home 命令
 
     def home_id(self):
         live = global_state.live
         live.id_slide_mm = 0.0
         if "id_pos_label" in self.ids:
-            self.ids.id_pos_label.text = "0.0 mm"
+            unit = MDApp.get_running_app()._("common_unit_mm")
+            self.ids.id_pos_label.text = f"0.0 {unit}"
 
     def home_head(self):
         live = global_state.live
         live.id_head_mm = 0.0
         if "head_pos_label" in self.ids:
-            self.ids.head_pos_label.text = "0.0 mm"
+            unit = MDApp.get_running_app()._("common_unit_mm")
+            self.ids.head_pos_label.text = f"0.0 {unit}"
 
     # ---------- 旋转轴按钮回调 ----------
 
@@ -160,22 +173,26 @@ class ManualScreen(MDScreen):
         live = global_state.live
         live.pipe_angle_deg = 0.0
         if "main_angle_label" in self.ids:
-            self.ids.main_angle_label.text = "0.0 °"
+            unit = MDApp.get_running_app()._("common_unit_deg")
+            self.ids.main_angle_label.text = f"0.0 {unit}"
 
     def home_aux_rot(self):
         live = global_state.live
         live.aux_angle_deg = 0.0
         if "aux_angle_label" in self.ids:
-            self.ids.aux_angle_label.text = "0.0 °"
+            unit = MDApp.get_running_app()._("common_unit_deg")
+            self.ids.aux_angle_label.text = f"0.0 {unit}"
 
     # ---------- 步距 slider 回调 ----------
 
     def on_linear_step_slider(self, value):
         self.linear_step_mm = float(value)
         if "linear_step_label" in self.ids:
-            self.ids.linear_step_label.text = f"{self.linear_step_mm:0.1f} mm"
+            unit = MDApp.get_running_app()._("common_unit_mm")
+            self.ids.linear_step_label.text = f"{self.linear_step_mm:0.1f} {unit}"
 
     def on_rot_step_slider(self, value):
         self.rotary_step_deg = float(value)
         if "rot_step_label" in self.ids:
-            self.ids.rot_step_label.text = f"{self.rotary_step_deg:0.1f} °"
+            unit = MDApp.get_running_app()._("common_unit_deg")
+            self.ids.rot_step_label.text = f"{self.rotary_step_deg:0.1f} {unit}"

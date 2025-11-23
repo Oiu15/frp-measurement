@@ -7,13 +7,13 @@ class LiveData:
     inner_diameter: float = 0.0
     angle_deg: float = 0.0
     slide_pos_mm: float = 0.0
-    status_text: str = "READY"
+    status_text: str = "ready"
 
 
 @dataclass
 class SystemState:
     live: LiveData = field(default_factory=LiveData)
-    current_step: str = "Idle"
+    current_step: str = "idle"
     servo_x_on: bool = False
     servo_y_on: bool = False
     servo_r_on: bool = False

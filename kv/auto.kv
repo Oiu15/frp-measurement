@@ -14,10 +14,13 @@
                     on_release: app.change_screen("home")
 
             MDTopAppBarTitle:
-                text: "FRP Pipe - Auto Measure"
+                text: app.i18n.current_lang and app._("auto_title")
                 halign: "center"
 
             MDTopAppBarTrailingButtonContainer:
                 MDActionTopAppBarButton:
                     icon: "play-circle"
                     on_release: root.start_auto()
+                MDActionTopAppBarButton:
+                    icon: "translate"
+                    on_release: app.toggle_language()
