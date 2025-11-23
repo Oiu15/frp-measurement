@@ -1,0 +1,47 @@
+#:import SegmentedRing ui.widgets.segmentedring.SegmentedRing
+
+<HomeActionCard@MDCard>:
+    radius: [24, 24, 24, 24]
+    padding: "24dp"
+    elevation: 4
+    md_bg_color: app.theme_cls.backgroundColor
+
+    MDBoxLayout:
+        orientation: "vertical"
+        spacing: "16dp"
+
+        # 顶部动作文字，例如 "Moving ID Slide..."
+        MDLabel:
+            id: action_label
+            text: "Moving ID Slide..."
+            font_style: "Title"
+            role: "small"
+            halign: "center"
+
+        # 中间区域：分段进度环 + 圆形按钮
+        RelativeLayout:
+            size_hint_y: None
+            height: "200dp"
+
+            SegmentedRing:
+                id: action_ring
+                size_hint: None, None
+                size: "160dp", "160dp"
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                total_steps: 8
+                current_step: 0
+                gap_angle: 8
+                line_width: 10
+
+            MDIconButton:
+                id: action_btn
+                icon: "play"
+                theme_icon_color: "Custom"
+                icon_color: 1, 1, 1, 1
+                md_bg_color: app.theme_cls.primaryColor
+                user_font_size: "36sp"
+                size_hint: None, None
+                size: "96dp", "96dp"
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                on_release:
+                    app.root.current_screen.on_action_button()

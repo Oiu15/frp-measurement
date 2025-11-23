@@ -48,13 +48,13 @@ class HomeScreen(MDScreen):
         if "ng_count_item" in ids:
             ids.ng_count_item.value = "1"
 
-        # Step labels
+        # Step labels（旧的 Current/Next Step）
         if "current_step_label" in ids:
             ids.current_step_label.text = "Current Step: Standby"
         if "next_step_label" in ids:
             ids.next_step_label.text = "Next Step: Start Measure"
 
-        # State button initial text
+        # State button initial text（如果还在用的话）
         if "state_button_text" in ids:
             ids.state_button_text.text = "Start"
 
@@ -107,31 +107,24 @@ class HomeScreen(MDScreen):
             ids.comm_status_value.text = "All links online"
             ids.comm_status_value.text_color = self.theme_cls.primary_color
         else:
-            # 例如：["PLC", "CL-Controller"]
             ids.comm_status_value.text = "Offline: " + ", ".join(offline)
-            ids.comm_status_value.text_color = (
-                1,
-                0.3,
-                0.3,
-                1,
-            )  # 红色，之后你可以改成主题里的错误色
+            ids.comm_status_value.text_color = (1, 0.3, 0.3, 1)
 
-    def on_state_button_pressed(self):
-        print(">>> state button pressed")
+    # —— 新增：右下角 Action 卡片的按钮逻辑 ——
+    def on_action_button(self):
+        """Home 界面右下角圆形按钮被点击时调用。"""
+        card = self.ids.home_action_card
+        ring = card.ids.action_ring
+        btn = card.ids.action_btn
+        label = card.ids.action_label
 
-        # 获取按钮文字控件，而不是按钮本体
-        lbl = self.ids.get("state_button_text")
-        if not lbl:
-            print("ERROR: state_button_text id not found")
-            return
-
-        current = (lbl.text or "").strip()
-
-        if current == "Start":
-            lbl.text = "Running"
-        elif current == "Running":
-            lbl.text = "Paused"
-        else:
-            lbl.text = "Start"
-
-        print(f">>> state changed to: {lbl.text}")
+        # 简单 demo 状态机：Play / Pause
+        if btn.icon == "play":
+            btn.icon = "pause"
+            label.text = "Moving ID Slide..."
+            ring.total_steps = 8
+            ring.current_step = 1  # 从第 1 格开始点亮
+        elif btn.icon == "pause":
+            btn.icon = "play"
+            label.text = "Paused - Moving ID Slide"
+            # 暂停时不动 current_step；真实项目里可挂起测量流程

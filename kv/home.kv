@@ -148,43 +148,12 @@
                     StatusInfoCard:
                         id: status_info_card
                         size_hint_x: 1
-
-                MDCard:
+ 
+                HomeActionCard:
+                    id: home_action_card
                     orientation: "vertical"
                     padding: "16dp"
                     size_hint_x: 15
-                    MDBoxLayout:
-                        orientation: "horizontal"
-                        spacing: "16dp"
-
-                        MDBoxLayout:
-                            orientation: "vertical"
-                            spacing: "10dp"
-                            size_hint_x: 0.6
-                            MDLabel:
-                                id: current_step_label
-                                text: "Current Step: 1"
-                                halign: "left"
-                                theme_text_color: "Primary"
-                            MDLabel:
-                                id: next_step_label
-                                text: "Next Step: 2"
-                                halign: "left"
-                                theme_text_color: "Secondary"
-
-                        MDButton:
-                            id: state_button
-                            style: "elevated"
-                            size_hint: None, None
-                            size: "120dp", "64dp"
-                            theme_bg_color: "Custom"
-                            md_bg_color: 0.2, 0.6, 0.9, 1
-                            on_release: root.on_state_button_pressed()
-
-                            MDButtonText:
-                                id: state_button_text
-                                text: "Start"
-                                theme_text_color: "Custom"
-                                text_color: 1, 1, 1, 1
-
+                    size_hint_y: None
+                    height: "260dp"
 
