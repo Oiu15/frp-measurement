@@ -145,35 +145,9 @@
                     orientation: "vertical"
                     padding: "16dp"
                     size_hint_x: 35
-                    MDGridLayout:
-                        cols: 2
-                        rows: 3
-                        spacing: "12dp"
-                        row_default_height: "60dp"
-                        InfoItem:
-                            id: system_state_item
-                            label: "System State"
-                            value: "Ready"
-                        InfoItem:
-                            id: measurement_state_item
-                            label: "Measurement State"
-                            value: "Idle"
-                        InfoItem:
-                            id: runtime_item
-                            label: "Runtime"
-                            value: "00:10:00"
-                        InfoItem:
-                            id: current_recipe_item
-                            label: "Current Recipe"
-                            value: "Demo-01"
-                        InfoItem:
-                            id: part_count_item
-                            label: "Part Count"
-                            value: "12"
-                        InfoItem:
-                            id: ng_count_item
-                            label: "NG Count"
-                            value: "1"
+                    StatusInfoCard:
+                        id: status_info_card
+                        size_hint_x: 1
 
                 MDCard:
                     orientation: "vertical"

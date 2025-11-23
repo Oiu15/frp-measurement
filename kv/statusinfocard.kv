@@ -1,0 +1,239 @@
+<StatusInfoCard@MDBoxLayout>:
+    orientation: "vertical"
+    padding: "8dp"
+
+    MDGridLayout:
+        cols: 2
+        adaptive_height: True
+        spacing: "24dp"     
+
+        # ================= 左栏：系统 + 通讯 =================
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: "4dp"
+            adaptive_height: True
+
+            # --- System ---
+            MDLabel:
+                text: "System"
+                font_style: "Title"
+                role: "small"
+                bold: True
+                theme_text_color: "Secondary"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "System State"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: system_state_value
+                    text: "Ready"
+                    halign: "right"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "Mode"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: system_mode_value
+                    text: "Auto"
+                    halign: "right"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "Runtime"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: system_runtime_value
+                    text: "00:10:00"
+                    halign: "right"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "Current Recipe"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: system_recipe_value
+                    text: "Demo-01"
+                    halign: "right"
+                    shorten: True
+                    shorten_from: "left"
+
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "Last Result"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: system_last_result_value
+                    text: "OK"
+                    halign: "right"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+            # 间隔一点，让 System 与 Communication 视觉上分开
+            Widget:
+                size_hint_y: None
+                height: "8dp"
+
+            # --- Communication ---
+            MDLabel:
+                text: "Communication"
+                font_style: "Title"
+                role: "small"
+                bold: True
+                theme_text_color: "Secondary"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            # 单行显示，将来可以加滚动效果的那一行
+            MDBoxLayout:
+                size_hint_y: None
+                height: "24dp"
+
+                MDLabel:
+                    id: comm_status_value
+                    text: "All links online"
+                    # 正常时用主题颜色，错误时在 Python 里改成红色
+                    theme_text_color: "Custom"
+                    text_color: app.theme_cls.primaryColor
+                    halign: "left"
+                    shorten: True        # 超出宽度时先用 shorten，之后再做滚动动画
+                    shorten_from: "right"
+
+        # ================= 右栏：测量 =================
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: "4dp"
+            adaptive_height: True
+
+            MDLabel:
+                text: "Measurement"
+                font_style: "Title"
+                role: "small"
+                bold: True
+                theme_text_color: "Secondary"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "State"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: meas_state_value
+                    text: "Idle"
+                    halign: "right"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "Current Step"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: meas_step_value
+                    text: "-"
+                    halign: "right"
+                    shorten: True
+                    shorten_from: "left"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "Last Measure Time"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None  
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: meas_last_time_value
+                    text: "00:00"
+                    halign: "right"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "Average Measure Time"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: meas_avg_time_value
+                    text: "00:00"
+                    halign: "right"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "Part Count"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: meas_part_count_value
+                    text: "12"
+                    halign: "right"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "NG Count"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: meas_ng_count_value
+                    text: "1"
+                    halign: "right"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+            MDBoxLayout:
+                adaptive_height: True
+                MDLabel:
+                    text: "Last NG Reason"
+                    theme_text_color: "Secondary"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    id: meas_last_ng_reason_value
+                    text: "-"
+                    halign: "right"
+                    shorten: True
+                    shorten_from: "left"
+                    size_hint_y: None
+                    height: self.texture_size[1]

@@ -82,6 +82,40 @@ class HomeScreen(MDScreen):
         if slide_value:
             slide_value.text = f"{global_state.live.slide_pos_mm:0.1f} mm"
 
+    def update_status_panel(self, status: dict):
+        ids = self.ids.status_info_card.ids
+
+        # System
+        ids.system_state_value.text = status.get("system_state", "Unknown")
+        ids.system_mode_value.text = status.get("mode", "Auto")
+        ids.system_runtime_value.text = status.get("runtime", "00:00:00")
+        ids.system_recipe_value.text = status.get("recipe", "-")
+        ids.system_last_result_value.text = status.get("last_result", "-")
+
+        # Measurement
+        ids.meas_state_value.text = status.get("meas_state", "Idle")
+        ids.meas_step_value.text = status.get("meas_step", "-")
+        ids.meas_last_time_value.text = status.get("last_time", "00:00")
+        ids.meas_avg_time_value.text = status.get("avg_time", "00:00")
+        ids.meas_part_count_value.text = str(status.get("part_count", 0))
+        ids.meas_ng_count_value.text = str(status.get("ng_count", 0))
+        ids.meas_last_ng_reason_value.text = status.get("last_ng_reason", "-")
+
+        # Communication（收集 offline 项，构造单行文本）
+        offline = status.get("offline_links", [])
+        if not offline:
+            ids.comm_status_value.text = "All links online"
+            ids.comm_status_value.text_color = self.theme_cls.primary_color
+        else:
+            # 例如：["PLC", "CL-Controller"]
+            ids.comm_status_value.text = "Offline: " + ", ".join(offline)
+            ids.comm_status_value.text_color = (
+                1,
+                0.3,
+                0.3,
+                1,
+            )  # 红色，之后你可以改成主题里的错误色
+
     def on_state_button_pressed(self):
         print(">>> state button pressed")
 
