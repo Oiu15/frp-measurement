@@ -118,19 +118,8 @@ from kivymd.uix.menu import MDDropdownMenu
 from i18n import I18N
 from ui.config import load_config, save_config
 
-# MDSeparator compatibility
-try:
-    from kivymd.uix.separator import MDSeparator  # Newer KivyMD
-except ImportError:
-    try:
-        from kivymd.uix.list import MDSeparator  # Older KivyMD
-    except ImportError:
-        from kivymd.uix.divider import MDDivider  # KivyMD 2.x
-
-        class MDSeparator(MDDivider):
-            """Compat alias for removed MDSeparator."""
-
-            pass
+# MDSeparator compatibility (KivyMD 2.0.1.dev0 removes it; use divider)
+from kivymd.uix.divider import MDDivider as MDSeparator
 
 
 # ------------------------------------------------------------
