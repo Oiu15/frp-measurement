@@ -1,4 +1,4 @@
-﻿from .alarm import AlarmScreen
+from .alarm import AlarmScreen
 from .auto import AutoMeasureScreen
 from .home import HomeScreen
 from .manual import ManualScreen

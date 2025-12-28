@@ -1,4 +1,4 @@
-﻿from kivy.properties import ListProperty
+from kivy.properties import ListProperty
 from kivy.uix.widget import Widget
 
 

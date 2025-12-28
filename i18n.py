@@ -1,4 +1,4 @@
-﻿import json
+import json
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -6,7 +6,12 @@ from typing import Any, Dict, Optional
 class I18N:
     """Simple JSON-based translator with fallback support."""
 
-    def __init__(self, locales_dir: str, default_lang: str = "en_US", fallback_lang: Optional[str] = None):
+    def __init__(
+        self,
+        locales_dir: str,
+        default_lang: str = "en_US",
+        fallback_lang: Optional[str] = None,
+    ):
         self.locales_dir = Path(locales_dir)
         self.default_lang = default_lang
         self.fallback_lang = fallback_lang or default_lang
@@ -48,4 +53,3 @@ class I18N:
 
 
 __all__ = ["I18N"]
-

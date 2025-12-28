@@ -1,4 +1,4 @@
-﻿from kivy.metrics import dp
+from kivy.metrics import dp
 from kivy.properties import ListProperty
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout

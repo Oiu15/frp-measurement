@@ -1,9 +1,8 @@
-﻿from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 
 from logic.models import global_state
-from main import plc_service
 
 CMD_GREEN_BUTTON = 1
 CMD_AXIS0_MOVE = 100
@@ -203,11 +202,14 @@ class ManualScreen(MDScreen):
 
     def send_green_button(self):
         """ʾ����ģ���̰�ť���"""
+        plc_service = MDApp.get_running_app().plc_service
         if plc_service:
             plc_service.enqueue_command(CMD_GREEN_BUTTON)
 
     def send_axis0_move(self, target_pos: float):
         """ʾ������0 ��λ���payload ��Ŀ��λ�� tag"""
+        plc_service = MDApp.get_running_app().plc_service
         if plc_service:
-            plc_service.enqueue_command(CMD_AXIS0_MOVE, payload={"AXIS0_TARGET": float(target_pos)})
-
+            plc_service.enqueue_command(
+                CMD_AXIS0_MOVE, payload={"AXIS0_TARGET": float(target_pos)}
+            )

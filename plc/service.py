@@ -1,4 +1,4 @@
-﻿import threading
+import threading
 import time
 from queue import Queue, Empty
 from typing import Any, Dict, Optional
@@ -14,7 +14,9 @@ _POLL_INTERVAL = 0.2
 class PlcService:
     """Background PLC service with non-blocking UI access."""
 
-    def __init__(self, ip: str, slot: int = 0, timeout: float = 1.0, use_dummy: bool = False):
+    def __init__(
+        self, ip: str, slot: int = 0, timeout: float = 1.0, use_dummy: bool = False
+    ):
         self.ip = ip
         self.slot = slot
         self.timeout = timeout
@@ -30,7 +32,9 @@ class PlcService:
         if self._thread and self._thread.is_alive():
             return
         self._stop.clear()
-        self._thread = threading.Thread(target=self._loop, name="plc-service", daemon=True)
+        self._thread = threading.Thread(
+            target=self._loop, name="plc-service", daemon=True
+        )
         self._thread.start()
 
     def stop(self):
@@ -109,3 +113,17 @@ class PlcService:
             except Empty:
                 return
 
+
+_plc_service = None
+
+
+def get_plc_service(config) -> PlcService:
+    global _plc_service
+    if _plc_service is None:
+        _plc_service = PlcService(
+            ip=config.get("plc_ip", "192.168.0.10"),
+            slot=0,
+            timeout=1.0,
+            use_dummy=False,
+        )
+    return _plc_service

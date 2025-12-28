@@ -1,4 +1,4 @@
-﻿import contextlib
+import contextlib
 from typing import Any, Dict, List, Optional
 
 try:

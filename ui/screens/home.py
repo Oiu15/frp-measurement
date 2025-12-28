@@ -3,7 +3,6 @@ from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 
 from logic.models import global_state
-from main import plc_service
 
 
 class HomeScreen(MDScreen):
@@ -104,11 +103,15 @@ class HomeScreen(MDScreen):
         self._last_status = status
 
         # System
-        ids.system_state_value.text = status.get("system_state", app._("status_unknown"))
+        ids.system_state_value.text = status.get(
+            "system_state", app._("status_unknown")
+        )
         ids.system_mode_value.text = status.get("mode", app._("status_mode_auto"))
         ids.system_runtime_value.text = status.get("runtime", "00:00:00")
         ids.system_recipe_value.text = status.get("recipe", app._("status_dash"))
-        ids.system_last_result_value.text = status.get("last_result", app._("status_dash"))
+        ids.system_last_result_value.text = status.get(
+            "last_result", app._("status_dash")
+        )
 
         # Measurement
         ids.meas_state_value.text = status.get("meas_state", app._("status_idle"))
@@ -117,16 +120,22 @@ class HomeScreen(MDScreen):
         ids.meas_avg_time_value.text = status.get("avg_time", "00:00")
         ids.meas_part_count_value.text = str(status.get("part_count", 0))
         ids.meas_ng_count_value.text = str(status.get("ng_count", 0))
-        ids.meas_last_ng_reason_value.text = status.get("last_ng_reason", app._("status_dash"))
+        ids.meas_last_ng_reason_value.text = status.get(
+            "last_ng_reason", app._("status_dash")
+        )
 
         # Communication (collect offline links and render single line)
         offline = status.get("offline_links", [])
         if not offline:
             ids.comm_status_value.text = app._("status_all_online")
-            primary = getattr(app.theme_cls, "primary_color", None) or getattr(app.theme_cls, "primaryColor", None)
+            primary = getattr(app.theme_cls, "primary_color", None) or getattr(
+                app.theme_cls, "primaryColor", None
+            )
             ids.comm_status_value.text_color = primary
         else:
-            ids.comm_status_value.text = app._("status_offline_prefix", links=", ".join(offline))
+            ids.comm_status_value.text = app._(
+                "status_offline_prefix", links=", ".join(offline)
+            )
             ids.comm_status_value.text_color = (1, 0.3, 0.3, 1)
 
     # Action card button in bottom-right corner
@@ -154,9 +163,13 @@ class HomeScreen(MDScreen):
         app = MDApp.get_running_app()
         ids = self.ids
         if "current_step_label" in ids:
-            ids.current_step_label.text = app._("home_current_step_fmt", step=app._("home_step_standby"))
+            ids.current_step_label.text = app._(
+                "home_current_step_fmt", step=app._("home_step_standby")
+            )
         if "next_step_label" in ids:
-            ids.next_step_label.text = app._("home_next_step_fmt", step=app._("home_step_start"))
+            ids.next_step_label.text = app._(
+                "home_next_step_fmt", step=app._("home_step_start")
+            )
         if "state_button_text" in ids:
             ids.state_button_text.text = app._("home_state_button_start")
         # Refresh status defaults
@@ -170,11 +183,14 @@ class HomeScreen(MDScreen):
 
     def _poll_plc_state(self, dt):
         """Pull latest PLC snapshot on UI thread without blocking."""
+        plc_service = MDApp.get_running_app().plc_service
         if not plc_service:
             return
         state = plc_service.get_latest_state()
         ids = self.ids
         if "measurement_state_item" in ids:
-            ids.measurement_state_item.value = "online" if state.connected else "offline"
+            ids.measurement_state_item.value = (
+                "online" if state.connected else "offline"
+            )
         if "system_state_item" in ids:
             ids.system_state_item.value = state.sys_state

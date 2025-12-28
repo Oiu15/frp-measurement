@@ -1,4 +1,4 @@
-﻿# ui/widgets/segmentedring.py
+# ui/widgets/segmentedring.py
 from kivy.uix.widget import Widget
 from kivy.properties import NumericProperty, ListProperty
 from kivy.graphics import Color, Line

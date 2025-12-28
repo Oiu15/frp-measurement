@@ -1,4 +1,4 @@
-﻿import math
+import math
 import random
 
 from kivy.clock import Clock

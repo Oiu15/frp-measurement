@@ -1,4 +1,4 @@
-﻿import os
+import os
 import ctypes
 from ctypes import c_double, c_int, Structure
 

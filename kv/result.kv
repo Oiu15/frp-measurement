@@ -1,4 +1,4 @@
-﻿<ResultScreen>:
+<ResultScreen>:
     name: "result"
     MDBoxLayout:
         orientation: "vertical"
@@ -36,7 +36,9 @@
                     text: app.i18n.current_lang and app._("result_report_title")
                     theme_text_color: "Secondary"
                     padding_y: dp(4)
-                MDSeparator:
+                MDDivider:
+                    height: "1dp"
+                    color: 0.3, 0.3, 0.3, 1 # 分隔线颜色 
                 MDBoxLayout:
                     id: result_table_container
                     orientation: "vertical"

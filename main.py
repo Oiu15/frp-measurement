@@ -118,11 +118,9 @@ from kivymd.uix.menu import MDDropdownMenu
 from i18n import I18N
 from ui.config import load_config, save_config
 
-# MDSeparator compatibility (KivyMD 2.0.1.dev0 removes it; use divider)
-from kivymd.uix.divider import MDDivider as MDSeparator
+from kivymd.uix.divider import MDDivider
 
-
-# ------------------------------------------------------------
+from plc.service import get_plc_service
 
 
 # Legacy aliases for KivyMD 1.x names
@@ -159,13 +157,9 @@ class FRPHMIDemo(MDApp):
         locales_dir = resource_path("locales")
         self.i18n = I18N(locales_dir, default_lang=self.lang, fallback_lang="zh_CN")
 
-        self.plc_service = PlcService(
-            ip=self.config_data.get("plc_ip", "192.168.0.10"),
-            slot=0,
-            timeout=1.0,
-            use_dummy=False,
-        )
+        self.plc_service = get_plc_service(self.config_data)
         global plc_service
+
         plc_service = self.plc_service
 
     def build(self):
