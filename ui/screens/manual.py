@@ -3,22 +3,25 @@ from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 
 from logic.models import global_state
+from main import plc_service
+
+CMD_GREEN_BUTTON = 1
+CMD_AXIS0_MOVE = 100
 
 
 class ManualScreen(MDScreen):
     """Manual / Jog page for all 5 motors (2 slides + 3 rotary/extension axes).
 
-    ç°åœ¨è¿˜æ˜¯æ¼”ç¤º UIã€‚
-    ä¹‹åä½ å¯ä»¥åœ¨ _apply_linear_jog / _apply_rotary_jog / home_* ç­‰
-    åŠ ä¸ŠçœŸæ­£çš„ PLC æŒ‡ä»¤ã€‚
+    ÏÖÔÚ»¹ÊÇÑİÊ¾ UI£¬Ö®ºóÄã¿ÉÒÔÔÚ _apply_linear_jog / _apply_rotary_jog / home_* µÈ
+    ¼ÓÉÏÕæÕıµÄ PLC Ö¸Áî¡£
     """
 
-    # å…±äº«æ­¥è·
+    # ¹²Ïí²½¾à
     linear_step_mm = NumericProperty(0.5)
     rotary_step_deg = NumericProperty(5.0)
 
     def on_kv_post(self, base_widget):
-        """kv ç»‘å®šå®Œæˆåï¼Œå…ˆæŠŠ global_state åˆå§‹åŒ–å„ä¸ªä½ç½®é‡"""
+        """kv °ó¶¨Íê³Éºó£¬ÏÈ°Ñ global_state ³õÊ¼»¯¸÷¸öÎ»ÖÃÁ¿"""
         live = global_state.live
 
         def init_attr(name, default):
@@ -26,15 +29,14 @@ class ManualScreen(MDScreen):
                 setattr(live, name, default)
             return getattr(live, name)
 
-        # ä¿è¯è¿™äº›å±æ€§å­˜åœ¨
-        init_attr("od_slide_mm", 0.0)  # å¤–å¾„æ»‘å°
-        init_attr("id_slide_mm", 0.0)  # å†…å¾„æ»‘å°ï¼ˆå…±è½¨ï¼‰
-        init_attr("id_head_mm", 0.0)  # å†…å¾„æµ‹å¤´ä¼¸ç¼©
-        init_attr("pipe_angle_deg", 0.0)  # ä¸»æ—‹è½¬
-        init_attr("aux_angle_deg", 0.0)  # ä»æ—‹è½¬
-
+        # ±£Ö¤ÕâĞ©ÊôĞÔ´æÔÚ
+        init_attr("od_slide_mm", 0.0)  # Íâ¾¶»¬Ì¨
+        init_attr("id_slide_mm", 0.0)  # ÄÚ¾¶»¬Ì¨£¨¹²¹ì£©
+        init_attr("id_head_mm", 0.0)  # ÄÚ¾¶²âÍ·ÉìËõ
+        init_attr("pipe_angle_deg", 0.0)  # Ö÷Ğı×ª
+        init_attr("aux_angle_deg", 0.0)  # ´ÓĞı×ª
         ids = self.ids
-        # ä½ç½®æ˜¾ç¤º
+        # Î»ÖÃÏÔÊ¾
         if "od_pos_label" in ids:
             unit = MDApp.get_running_app()._("common_unit_mm")
             ids.od_pos_label.text = f"{live.od_slide_mm:0.1f} {unit}"
@@ -51,7 +53,7 @@ class ManualScreen(MDScreen):
             unit = MDApp.get_running_app()._("common_unit_deg")
             ids.aux_angle_label.text = f"{live.aux_angle_deg:0.1f} {unit}"
 
-        # æ­¥è·æ˜¾ç¤º & slider
+        # ²½¾àÏÔÊ¾ & slider
         if "linear_step_label" in ids:
             unit = MDApp.get_running_app()._("common_unit_mm")
             ids.linear_step_label.text = f"{self.linear_step_mm:0.1f} {unit}"
@@ -64,10 +66,10 @@ class ManualScreen(MDScreen):
         if "rot_step_slider" in ids:
             ids.rot_step_slider.value = self.rotary_step_deg
 
-    # ---------- é€šç”¨çº¿æ€§ Jog ----------
+    # ---------- Í¨ÓÃÏßĞÔ Jog ----------
 
     def _apply_linear_jog(self, attr_name: str, direction: int):
-        """æŒ‰çº¿æ€§æ­¥è·ç§»åŠ¨æŸä¸ªè½´ï¼Œdirection = Â±1"""
+        """°´ÏßĞÔ²½¾àÒÆ¶¯Ä³¸öÖá£¬direction = ¡À1"""
         live = global_state.live
         step = float(self.linear_step_mm)
 
@@ -86,12 +88,12 @@ class ManualScreen(MDScreen):
             unit = MDApp.get_running_app()._("common_unit_mm")
             ids[lbl_id].text = f"{pos:0.1f} {unit}"
 
-        # TODO: è¿™é‡Œè¿ PLC ç›´çº¿è¿åŠ¨å‘½ä»¤
+        # TODO: ÕâÀï½Ó PLC Ö±ÏßÔË¶¯ÃüÁî
 
-    # ---------- é€šç”¨æ—‹è½¬ Jog ----------
+    # ---------- Í¨ÓÃĞı×ª Jog ----------
 
     def _apply_rotary_jog(self, attr_name: str, direction: int):
-        """æŒ‰è§’åº¦æ­¥è·æ—‹è½¬æŸä¸ªè½´ï¼Œdirection = Â±1"""
+        """°´½Ç¶È²½¾àĞı×ªÄ³¸öÖá£¬direction = ¡À1"""
         live = global_state.live
         step = float(self.rotary_step_deg)
 
@@ -109,9 +111,9 @@ class ManualScreen(MDScreen):
             unit = MDApp.get_running_app()._("common_unit_deg")
             ids[lbl_id].text = f"{ang:0.1f} {unit}"
 
-        # TODO: è¿™é‡Œè¿ PLC æ—‹è½¬å‘½ä»¤
+        # TODO: ÕâÀï½Ó PLC Ğı×ªÃüÁî
 
-    # ---------- çº¿æ€§è½´æŒ‰é’®å›è°ƒ ----------
+    # ---------- ÏßĞÔÖá°´Å¥»Øµ÷ ----------
 
     def jog_od_neg(self):
         self._apply_linear_jog("od_slide_mm", -1)
@@ -126,11 +128,11 @@ class ManualScreen(MDScreen):
         self._apply_linear_jog("id_slide_mm", +1)
 
     def jog_head_in(self):
-        """å†…å¾„æµ‹å¤´ç¼©å›"""
+        """ÄÚ¾¶²âÍ·Ëõ»Ø"""
         self._apply_linear_jog("id_head_mm", -1)
 
     def jog_head_out(self):
-        """å†…å¾„æµ‹å¤´ä¼¸å‡º"""
+        """ÄÚ¾¶²âÍ·Éì³ö"""
         self._apply_linear_jog("id_head_mm", +1)
 
     def home_od(self):
@@ -139,7 +141,7 @@ class ManualScreen(MDScreen):
         if "od_pos_label" in self.ids:
             unit = MDApp.get_running_app()._("common_unit_mm")
             self.ids.od_pos_label.text = f"0.0 {unit}"
-        # TODO: PLC Home å‘½ä»¤
+        # TODO: PLC Home ÃüÁî
 
     def home_id(self):
         live = global_state.live
@@ -155,7 +157,7 @@ class ManualScreen(MDScreen):
             unit = MDApp.get_running_app()._("common_unit_mm")
             self.ids.head_pos_label.text = f"0.0 {unit}"
 
-    # ---------- æ—‹è½¬è½´æŒ‰é’®å›è°ƒ ----------
+    # ---------- Ğı×ªÖá°´Å¥»Øµ÷ ----------
 
     def jog_main_ccw(self):
         self._apply_rotary_jog("pipe_angle_deg", -1)
@@ -183,7 +185,7 @@ class ManualScreen(MDScreen):
             unit = MDApp.get_running_app()._("common_unit_deg")
             self.ids.aux_angle_label.text = f"0.0 {unit}"
 
-    # ---------- æ­¥è· slider å›è°ƒ ----------
+    # ---------- ²½¾à slider »Øµ÷ ----------
 
     def on_linear_step_slider(self, value):
         self.linear_step_mm = float(value)
@@ -196,3 +198,15 @@ class ManualScreen(MDScreen):
         if "rot_step_label" in self.ids:
             unit = MDApp.get_running_app()._("common_unit_deg")
             self.ids.rot_step_label.text = f"{self.rotary_step_deg:0.1f} {unit}"
+
+    # ---------- PLC ÃüÁîÊ¾Àı£¨·Ç×èÈû£© ----------
+
+    def send_green_button(self):
+        """Ê¾Àı£ºÄ£ÄâÂÌ°´Å¥Æô¶¯"""
+        if plc_service:
+            plc_service.enqueue_command(CMD_GREEN_BUTTON)
+
+    def send_axis0_move(self, target_pos: float):
+        """Ê¾Àı£ºÖá0 ¶¨Î»ÃüÁî£¬payload ·ÅÄ¿±êÎ»ÖÃ tag"""
+        if plc_service:
+            plc_service.enqueue_command(CMD_AXIS0_MOVE, payload={"AXIS0_TARGET": float(target_pos)})

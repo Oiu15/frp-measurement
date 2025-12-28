@@ -3,20 +3,24 @@ from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 
 from logic.models import global_state
+from main import plc_service
 
 
 class HomeScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._home_ev = None
+        self._plc_ev = None
         self._lang_bound = False
         self._last_status = {}
 
     def on_kv_post(self, base_widget):
-        # kv ç»‘å®šå®Œæˆåè°ƒç”¨ï¼Œè¿™æ—¶ ids å·²ç»å¯ç”¨
+        # kv °ó¶¨Íê³Éºóµ÷ÓÃ£¬ÕâÊ± ids ÒÑ¾­¿ÉÓÃ
         self.update_labels(0)
         if self._home_ev is None:
             self._home_ev = Clock.schedule_interval(self.update_labels, 0.2)
+        if self._plc_ev is None:
+            self._plc_ev = Clock.schedule_interval(self._poll_plc_state, 0.2)
         app = MDApp.get_running_app()
         if not self._lang_bound:
             app.bind(lang=lambda *args: self.refresh_language())
@@ -27,7 +31,7 @@ class HomeScreen(MDScreen):
         ids = self.ids
         app = MDApp.get_running_app()
 
-        # ResultCard dummy values (ä»…å­˜åœ¨æ—¶æ‰èµ‹å€¼)
+        # ResultCard dummy values£¨½ö´æÔÚÊ±²Å¸³Öµ£©
         if "length_card" in ids:
             ids.length_card.value = "1800.0"
             ids.length_card.unit = app._("common_unit_mm")
@@ -115,7 +119,7 @@ class HomeScreen(MDScreen):
         ids.meas_ng_count_value.text = str(status.get("ng_count", 0))
         ids.meas_last_ng_reason_value.text = status.get("last_ng_reason", app._("status_dash"))
 
-        # Communicationï¼ˆæ”¶ï¿½?offline é¡¹ï¼Œæ„é€ å•è¡Œæ–‡æœ¬ï¼‰
+        # Communication£¨ÊÕ?offline Ïî£¬¹¹µ¥ĞĞÎÄ±¾£©
         offline = status.get("offline_links", [])
         if not offline:
             ids.comm_status_value.text = app._("status_all_online")
@@ -125,25 +129,25 @@ class HomeScreen(MDScreen):
             ids.comm_status_value.text = app._("status_offline_prefix", links=", ".join(offline))
             ids.comm_status_value.text_color = (1, 0.3, 0.3, 1)
 
-    # â€”ï¿½?æ–°å¢ï¼šå³ä¸‹è§’ Action å¡ç‰‡çš„æŒ‰é’®é€»è¾‘ â€”ï¿½?
+    # ¡ª¡ª ĞÂÔö£ºÓÒÏÂ½Ç Action ¿¨Æ¬µÄ°´Å¥Âß¼­ ¡ª¡ª
     def on_action_button(self):
-        """Home ç•Œé¢å³ä¸‹è§’åœ†å½¢æŒ‰é’®è¢«ç‚¹å‡»æ—¶è°ƒç”¨"""
+        """Home ½çÃæÓÒÏÂ½ÇÔ²ĞÎ°´Å¥±»µã»÷Ê±µ÷ÓÃ"""
         card = self.ids.home_action_card
         ring = card.ids.action_ring
         btn = card.ids.action_btn
         label = card.ids.action_label
         app = MDApp.get_running_app()
 
-        # ç®€ï¿½?demo çŠ¶æ€æœºï¼šPlay / Pause
+        # ¼ò?demo ×´Ì¬»ú£ºPlay / Pause
         if btn.icon == "play":
             btn.icon = "pause"
             label.text = app._("home_action_moving_id")
             ring.total_steps = 8
-            ring.current_step = 1  # ä»ç¬¬ 1 æ ¼å¼€å§‹ç‚¹äº®
+            ring.current_step = 1  # ´ÓµÚ 1 ¸ñ¿ªÊ¼µãÁÁ
         elif btn.icon == "pause":
             btn.icon = "play"
             label.text = app._("home_action_paused_id")
-            # æš‚åœæ—¶ä¸æ”¹ current_stepï¼›çœŸå®é¡¹ç›®é‡Œå¯æŒ‚èµ·æµ‹é‡æµç¨‹
+            # ÔİÍ£Ê±²»Çå current_step£»ÕæÊµÏîÄ¿Àï¿É¹ÒÆğ²âÁ¿Á÷³Ì
 
     def refresh_language(self, *args):
         """Re-apply translated text for labels set via Python."""
@@ -155,7 +159,7 @@ class HomeScreen(MDScreen):
             ids.next_step_label.text = app._("home_next_step_fmt", step=app._("home_step_start"))
         if "state_button_text" in ids:
             ids.state_button_text.text = app._("home_state_button_start")
-        # æ›´æ–° status ä¿¡æ¯çš„é»˜è®¤å€¼
+        # ¸üĞÂ status ĞÅÏ¢µÄÄ¬ÈÏÖµ
         if hasattr(self, "update_status_panel"):
             self.update_status_panel(getattr(self, "_last_status", {}))
 
@@ -163,3 +167,14 @@ class HomeScreen(MDScreen):
         """Refresh dynamic texts when language changes."""
         self.update_labels(0)
         self.refresh_language()
+
+    def _poll_plc_state(self, dt):
+        """Pull latest PLC snapshot on UI thread without blocking."""
+        if not plc_service:
+            return
+        state = plc_service.get_latest_state()
+        ids = self.ids
+        if "measurement_state_item" in ids:
+            ids.measurement_state_item.value = "online" if state.connected else "offline"
+        if "system_state_item" in ids:
+            ids.system_state_item.value = state.sys_state

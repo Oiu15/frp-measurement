@@ -1,3 +1,4 @@
+from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 
 from ui.config import load_config, save_config
@@ -5,7 +6,7 @@ from ui.config import load_config, save_config
 
 class SettingsScreen(MDScreen):
     def on_kv_post(self, base_widget):
-        """kv ç»‘å®šå®Œæˆåï¼ŒæŠŠé…ç½®è¯»å‡ºæ¥å¡«è¿›æ–‡æœ¬æ¡†"""
+        """kv °ó¶¨Íê³Éºó£¬°ÑÅäÖÃ¶Á³öÀ´Ìî½øÎÄ±¾¿ò"""
         cfg = load_config()
         ids = self.ids
 
@@ -17,7 +18,7 @@ class SettingsScreen(MDScreen):
             ids.samples_field.text = str(cfg.get("samples_per_rev", "180"))
 
     def on_apply_button(self):
-        """ç‚¹å‡»â€œåº”ç”¨ / ä¿å­˜â€æŒ‰é’®æ—¶å†™å› JSON"""
+        """µã»÷¡°Ó¦ÓÃ/ ±£´æ¡±°´Å¥Ê±Ğ´»Ø JSON£¬²¢´¥·¢ PLC ÖØĞÂÁ¬½Ó"""
         ids = self.ids
         cfg = load_config()
 
@@ -37,4 +38,8 @@ class SettingsScreen(MDScreen):
                 pass
 
         save_config(cfg)
-        # è¿™é‡Œå¦‚æœè¦åŒæ­¥åˆ°æµ‹é‡æ ¸å¿ƒï¼Œå¯ä»¥åœ¨åé¢æ´¾å‘äº‹ä»¶ / è°ƒç”¨æ¥å£
+        app = MDApp.get_running_app()
+        svc = getattr(app, "plc_service", None)
+        if svc:
+            svc.reconfigure(ip=cfg.get("plc_ip", "192.168.0.10"), slot=0, timeout=1.0)
+        # ÕâÀïÈçĞèÍ¬²½µ½²âÁ¿ºËĞÄ£¬¿ÉÔÚºóÃæÅÉ·¢ÊÂ¼ş / µ÷ÓÃ½Ó¿Ú

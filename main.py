@@ -1,6 +1,7 @@
-ï»¿import os
+import os
 import sys
 import ctypes
+from pathlib import Path
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.properties import StringProperty
@@ -9,62 +10,66 @@ from kivy.resources import resource_add_path
 
 from kivymd.app import MDApp
 
+from plc.service import PlcService
+
+plc_service: PlcService | None = None
+
 
 def get_screen_size():
     """
-    ä¼˜å…ˆç”¨ Windows API å–ç‰©ç†å±å¹•åˆ†è¾¨ç‡ï¼›
-    å¤±è´¥æ—¶é€€å› Kivy çš„ Window.system_sizeã€‚
+    ÓÅÏÈÓÃ Windows API È¡ÎïÀíÆÁÄ»·Ö±æÂÊ£»
+    Ê§°ÜÊ±ÍË»Ø Kivy µÄ Window.system_size¡£
     """
     try:
         user32 = ctypes.windll.user32
-        # å½“å‰ä¸»å±å¹•åˆ†è¾¨ç‡ï¼ˆå·²ç»è€ƒè™‘ DPIï¼‰
+        # µ±Ç°Ö÷ÆÁÄ»·Ö±æÂÊ£¨ÒÑ¾­¿¼ÂÇ DPI£©
         sw = user32.GetSystemMetrics(0)  # SM_CXSCREEN
         sh = user32.GetSystemMetrics(1)  # SM_CYSCREEN
         if sw > 0 and sh > 0:
             return sw, sh
     except Exception:
         pass
-    # å…œåº•ï¼šç”¨ Kivy çš„
+    # ¶µµ×£ºÓÃ Kivy µÄ
     return Window.system_size
 
 
 def get_titlebar_height() -> int:
     """
-    ä¼°ç®—çª—å£æ ‡é¢˜æ +è¾¹æ¡†é«˜åº¦ï¼Œç”¨äºçºµå‘è¡¥å¿ã€‚
+    ¹ÀËã´°¿Ú±êÌâÀ¸+±ß¿ò¸ß¶È£¬ÓÃÓÚ×İÏò²¹³¥¡£
     """
     try:
         user32 = ctypes.windll.user32
-        SM_CYCAPTION = 4  # æ ‡é¢˜æ é«˜åº¦
-        SM_CYFRAME = 33  # æ¡†æ¶é«˜åº¦ï¼ˆå¤§æ¦‚å€¼ï¼Œå®é™…éš DPI å˜åŒ–ï¼‰
+        SM_CYCAPTION = 4  # ±êÌâÀ¸¸ß¶È
+        SM_CYFRAME = 33  # ¿ò¼Ü¸ß¶È£¨´ó¸ÅÖµ£¬Êµ¼ÊËæ DPI ±ä»¯£©
         caption = user32.GetSystemMetrics(SM_CYCAPTION)
         frame = user32.GetSystemMetrics(SM_CYFRAME)
         return caption + frame
     except Exception:
-        return 32  # å…œåº•å€¼
+        return 32  # ¶µµ×Öµ
 
 
 def center_window(width: int, height: int):
     """
-    è®¾ç½®çª—å£å¤§å°å¹¶æŠŠçª—å£æ”¾åœ¨å±å¹•æ­£ä¸­ã€‚
+    ÉèÖÃ´°¿Ú´óĞ¡²¢°Ñ´°¿Ú·ÅÔÚÆÁÄ»ÕıÖĞ¡£
     """
     Window.size = (width, height)
 
     sw, sh = get_screen_size()
     title_h = get_titlebar_height()
 
-    # å±…ä¸­ + çºµå‘è½»å¾®ä¸‹ç§»ï¼Œé¿å…è´´é¡¶è¢«æŒ¡
+    # ¾ÓÖĞ + ×İÏòÇáÎ¢ÏÂÒÆ£¬±ÜÃâÌù¶¥±»µ²
     Window.left = int((sw - width) / 2)
     Window.top = int((sh - height) / 2 - title_h / 2)
 
 
 def resource_path(rel_path: str) -> str:
     """
-    è¯»å–æ‰“åŒ…è¿› exe çš„èµ„æºæ–‡ä»¶ï¼ˆkv ç­‰ï¼‰ã€‚
-    å¼€å‘ç¯å¢ƒï¼šè¿”å›æºç ç›®å½•ä¸‹çš„è·¯å¾„ã€‚
-    onefileï¼šè¿”å› sys._MEIPASS ä¸‹çš„è·¯å¾„ã€‚
+    ¶ÁÈ¡´ò°ü½ø exe µÄ×ÊÔ´ÎÄ¼ş£¨kv µÈ£©¡£
+    ¿ª·¢»·¾³£º·µ»ØÔ´ÂëÄ¿Â¼ÏÂµÄÂ·¾¶¡£
+    onefile£º·µ»Ø sys._MEIPASS ÏÂµÄÂ·¾¶¡£
     """
     if hasattr(sys, "_MEIPASS"):
-        base_path = sys._MEIPASS  # PyInstaller onefile è§£å‹ç›®å½•
+        base_path = sys._MEIPASS  # PyInstaller onefile ½âÑ¹Ä¿Â¼
     else:
         base_path = os.path.dirname(__file__)
 
@@ -87,10 +92,10 @@ def register_fonts():
 
 def app_base_dir() -> str:
     """
-    åº”ç”¨â€œå¤–éƒ¨æ–‡ä»¶â€çš„åŸºå‡†ç›®å½•ï¼š
-    - å¼€å‘æ—¶ï¼šmain_md.py æ‰€åœ¨ç›®å½•
-    - æ‰“åŒ…åï¼šexe æ‰€åœ¨ç›®å½•
-    ç”¨æ¥æ”¾ config è¿™ç±»è¦é•¿æœŸä¿å­˜ã€å¯ä¿®æ”¹çš„æ–‡ä»¶ã€‚
+    Ó¦ÓÃ¡°Íâ²¿ÎÄ¼ş¡±µÄ»ù×¼Ä¿Â¼£º
+    - ¿ª·¢Ê±£ºmain_md.py ËùÔÚÄ¿Â¼
+    - ´ò°üºó£ºexe ËùÔÚÄ¿Â¼
+    ÓÃÀ´·Å config ÕâÀàÒª³¤ÆÚ±£´æ¡¢¿ÉĞŞ¸ÄµÄÎÄ¼ş¡£
     """
     if getattr(sys, "frozen", False):
         return os.path.dirname(sys.executable)
@@ -98,10 +103,9 @@ def app_base_dir() -> str:
         return os.path.dirname(__file__)
 
 
-# ---- KivyMD æ§ä»¶å¯¼å…¥ ----
+# ---- KivyMD ¿Ø¼şµ¼Èë ----
 from kivymd.icon_definitions import md_icons
 from kivymd.font_definitions import theme_font_styles
-from pathlib import Path
 from kivy.metrics import sp
 from kivymd.uix.appbar import MDTopAppBar
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -115,12 +119,12 @@ from kivymd.uix.menu import MDDropdownMenu
 from i18n import I18N
 from ui.config import load_config, save_config
 
-# MDSeparator å…¼å®¹å¤„ç†
+# MDSeparator ¼æÈİ´¦Àí
 try:
-    from kivymd.uix.separator import MDSeparator  # æ–°ç‰ˆæœ¬
+    from kivymd.uix.separator import MDSeparator  # ĞÂ°æ±¾
 except ImportError:
     try:
-        from kivymd.uix.list import MDSeparator  # æ—§ç‰ˆæœ¬
+        from kivymd.uix.list import MDSeparator  # ¾É°æ±¾
     except ImportError:
         from kivymd.uix.divider import MDDivider  # KivyMD 2.x
 
@@ -167,8 +171,17 @@ class FRPHMIDemo(MDApp):
         locales_dir = resource_path("locales")
         self.i18n = I18N(locales_dir, default_lang=self.lang, fallback_lang="zh_CN")
 
+        self.plc_service = PlcService(
+            ip=self.config_data.get("plc_ip", "192.168.0.10"),
+            slot=0,
+            timeout=1.0,
+            use_dummy=False,
+        )
+        global plc_service
+        plc_service = self.plc_service
+
     def build(self):
-        # æ·±è‰²ä¸»é¢˜ + è“ç°
+        # ÉîÉ«Ö÷Ìâ + À¶»Ò
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "#607d8b"
 
@@ -183,7 +196,7 @@ class FRPHMIDemo(MDApp):
 
         for style in theme_font_styles:
             if style == "Icon":
-                continue  # å›¾æ ‡ç”¨è‡ªå·±çš„å›¾æ ‡å­—ä½“ï¼Œåˆ«åŠ¨å®ƒ
+                continue  # Í¼±êÓÃ×Ô¼ºµÄÍ¼±ê×ÖÌå£¬±ğ¶¯Ëü
 
             for role in theme_font_styles[style]:
                 theme_font_styles[style][role]["font-name"] = "MSYH"
@@ -196,6 +209,17 @@ class FRPHMIDemo(MDApp):
     def on_start(self):
         # center_window(1280, 720)
         Window.maximize()
+        try:
+            if self.plc_service:
+                self.plc_service.start()
+        except Exception:
+            # PLC Æô¶¯Ê§°ÜÊ±²»ÖĞ¶Ï UI
+            pass
+
+    def on_stop(self):
+        if self.plc_service:
+            self.plc_service.stop()
+        return super().on_stop()
 
     def change_screen(self, name: str):
         """Switch to a named screen if it exists."""
