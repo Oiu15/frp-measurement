@@ -1,4 +1,4 @@
-# Central tag names; adjust to match PLC program.
+﻿# Central tag names; adjust to match PLC program.
 CMD_CODE = "HMI_CMD_CODE"
 CMD_SEQ = "HMI_CMD_SEQ"
 CMD_REQ = "HMI_CMD_REQ"
@@ -27,3 +27,4 @@ def status_tags():
         ALARM_CODE,
         COMM_HEALTH,
     ]
+

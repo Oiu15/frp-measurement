@@ -1,4 +1,4 @@
-{
+﻿{
   "home_title": "FRP Pipe - Home",
   "home_card_outer_title": "Outer Diameter",
   "home_card_inner_title": "Inner Diameter",
@@ -101,3 +101,4 @@
   "flow_step_finished": "Finished",
   "flow_step_error": "Error"
 }
+

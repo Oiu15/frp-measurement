@@ -1,4 +1,4 @@
-import threading
+﻿import threading
 import time
 from queue import Queue, Empty
 from typing import Any, Dict, Optional
@@ -108,3 +108,4 @@ class PlcService:
                 self._cmd_q.get_nowait()
             except Empty:
                 return
+

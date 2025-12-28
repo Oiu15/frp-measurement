@@ -1,4 +1,4 @@
-{
+﻿{
   "home_title": "FRP 管 - 首页",
   "home_card_outer_title": "外径",
   "home_card_inner_title": "内径",
@@ -101,3 +101,4 @@
   "flow_step_finished": "完成",
   "flow_step_error": "错误"
 }
+

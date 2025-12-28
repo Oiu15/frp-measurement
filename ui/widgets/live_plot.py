@@ -1,4 +1,4 @@
-from kivy.properties import ListProperty
+﻿from kivy.properties import ListProperty
 from kivy.uix.widget import Widget
 
 
@@ -63,3 +63,4 @@ class LivePlotWidget(Widget):
         self.outer_points = to_points(od_list, y_min, y_max)
         # 内径：用 inner_y_min / inner_y_max（局部自动缩放）
         self.inner_points = to_points(id_list, inner_y_min, inner_y_max)
+

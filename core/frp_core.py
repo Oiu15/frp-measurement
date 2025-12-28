@@ -1,4 +1,4 @@
-import os
+﻿import os
 import ctypes
 from ctypes import c_double, c_int, Structure
 
@@ -52,3 +52,4 @@ def compute() -> FrpResult:
     res = FrpResult()
     get_lib().frp_compute(ctypes.byref(res))
     return res
+

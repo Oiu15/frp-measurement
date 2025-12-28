@@ -1,4 +1,4 @@
-import json
+﻿import json
 import sys
 from pathlib import Path
 
@@ -45,3 +45,4 @@ def load_config() -> dict:
 def save_config(cfg: dict):
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     CONFIG_PATH.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+

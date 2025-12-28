@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+﻿from dataclasses import dataclass, field
 from typing import Any, Dict
 
 
@@ -49,3 +49,4 @@ class PlcState:
             comm_health=int(tags.get("COMM_HEALTH", 0) or 0),
             raw=tags,
         )
+

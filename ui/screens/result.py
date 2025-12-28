@@ -1,4 +1,4 @@
-from kivy.metrics import dp
+﻿from kivy.metrics import dp
 from kivy.properties import ListProperty
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -136,3 +136,4 @@ class ResultScreen(MDScreen):
                 ids.res_ok_label.text = app._("common_ok")
             elif text in ("NG", app._("common_ng").upper()):
                 ids.res_ok_label.text = app._("common_ng")
+

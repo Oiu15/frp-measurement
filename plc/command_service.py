@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+﻿from dataclasses import dataclass
 from typing import Any, Dict
 from . import tag_map
 
@@ -30,3 +30,4 @@ def interpret_ack(raw: Dict[str, Any], seq: int) -> CommandAck:
         done=done_seq == seq and err == 0,
         err_code=err if done_seq == seq else 0,
     )
+

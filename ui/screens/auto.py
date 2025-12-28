@@ -1,4 +1,4 @@
-import math
+﻿import math
 import random
 
 from kivy.clock import Clock
@@ -151,3 +151,4 @@ class AutoMeasureScreen(MDScreen):
             if ev is not None:
                 ev.cancel()
                 setattr(self, ev_name, None)
+

@@ -6,7 +6,7 @@ from ui.config import load_config, save_config
 
 class SettingsScreen(MDScreen):
     def on_kv_post(self, base_widget):
-        """kv 绑定完成后，把配置读出来填进文本框"""
+        """After kv binding, load config into text fields."""
         cfg = load_config()
         ids = self.ids
 
@@ -18,7 +18,7 @@ class SettingsScreen(MDScreen):
             ids.samples_field.text = str(cfg.get("samples_per_rev", "180"))
 
     def on_apply_button(self):
-        """点击“应用/ 保存”按钮时写回 JSON，并触发 PLC 重新连接"""
+        """Apply/save button: write JSON and trigger PLC reconnect."""
         ids = self.ids
         cfg = load_config()
 
@@ -42,4 +42,4 @@ class SettingsScreen(MDScreen):
         svc = getattr(app, "plc_service", None)
         if svc:
             svc.reconfigure(ip=cfg.get("plc_ip", "192.168.0.10"), slot=0, timeout=1.0)
-        # 这里如需同步到测量核心，可在后面派发事件 / 调用接口
+        # If measurement core needs sync, dispatch event/call API here

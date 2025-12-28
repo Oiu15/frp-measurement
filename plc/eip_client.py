@@ -1,4 +1,4 @@
-import contextlib
+﻿import contextlib
 from typing import Any, Dict, List, Optional
 
 try:
@@ -68,3 +68,4 @@ class DummyClient(EIPClient):
 
     def write_tags(self, writes: Dict[str, Any]):
         return
+

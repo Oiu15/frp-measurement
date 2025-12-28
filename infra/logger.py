@@ -1,4 +1,4 @@
-import logging
+﻿import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
@@ -21,3 +21,4 @@ def get_logger(name: str = "app") -> logging.Logger:
     stream.setFormatter(fmt)
     logger.addHandler(stream)
     return logger
+

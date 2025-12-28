@@ -15,7 +15,7 @@ class HomeScreen(MDScreen):
         self._last_status = {}
 
     def on_kv_post(self, base_widget):
-        # kv 绑定完成后调用，这时 ids 已经可用
+        # Called after kv binding; ids are ready
         self.update_labels(0)
         if self._home_ev is None:
             self._home_ev = Clock.schedule_interval(self.update_labels, 0.2)
@@ -31,7 +31,7 @@ class HomeScreen(MDScreen):
         ids = self.ids
         app = MDApp.get_running_app()
 
-        # ResultCard dummy values（仅存在时才赋值）
+        # ResultCard demo values (only set if present)
         if "length_card" in ids:
             ids.length_card.value = "1800.0"
             ids.length_card.unit = app._("common_unit_mm")
@@ -51,7 +51,7 @@ class HomeScreen(MDScreen):
             ids.concentricity_card.value = "0.10"
             ids.concentricity_card.unit = app._("common_unit_mm")
 
-        # InfoItems dummy values
+        # InfoItems demo values
         if "system_state_item" in ids:
             ids.system_state_item.value = app._("home_step_standby")
         if "measurement_state_item" in ids:
@@ -119,7 +119,7 @@ class HomeScreen(MDScreen):
         ids.meas_ng_count_value.text = str(status.get("ng_count", 0))
         ids.meas_last_ng_reason_value.text = status.get("last_ng_reason", app._("status_dash"))
 
-        # Communication（收?offline 项，构单行文本）
+        # Communication (collect offline links and render single line)
         offline = status.get("offline_links", [])
         if not offline:
             ids.comm_status_value.text = app._("status_all_online")
@@ -129,25 +129,25 @@ class HomeScreen(MDScreen):
             ids.comm_status_value.text = app._("status_offline_prefix", links=", ".join(offline))
             ids.comm_status_value.text_color = (1, 0.3, 0.3, 1)
 
-    # —— 新增：右下角 Action 卡片的按钮逻辑 ——
+    # Action card button in bottom-right corner
     def on_action_button(self):
-        """Home 界面右下角圆形按钮被点击时调用"""
+        """Handle click on the circular action button on Home."""
         card = self.ids.home_action_card
         ring = card.ids.action_ring
         btn = card.ids.action_btn
         label = card.ids.action_label
         app = MDApp.get_running_app()
 
-        # 简?demo 状态机：Play / Pause
+        # Simple demo state: Play / Pause
         if btn.icon == "play":
             btn.icon = "pause"
             label.text = app._("home_action_moving_id")
             ring.total_steps = 8
-            ring.current_step = 1  # 从第 1 格开始点亮
+            ring.current_step = 1  # Start from first segment
         elif btn.icon == "pause":
             btn.icon = "play"
             label.text = app._("home_action_paused_id")
-            # 暂停时不清 current_step；真实项目里可挂起测量流程
+            # In a real flow you might also pause measurement state
 
     def refresh_language(self, *args):
         """Re-apply translated text for labels set via Python."""
@@ -159,7 +159,7 @@ class HomeScreen(MDScreen):
             ids.next_step_label.text = app._("home_next_step_fmt", step=app._("home_step_start"))
         if "state_button_text" in ids:
             ids.state_button_text.text = app._("home_state_button_start")
-        # 更新 status 信息的默认值
+        # Refresh status defaults
         if hasattr(self, "update_status_panel"):
             self.update_status_panel(getattr(self, "_last_status", {}))
 

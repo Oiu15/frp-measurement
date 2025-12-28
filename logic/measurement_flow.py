@@ -1,4 +1,4 @@
-from enum import Enum, auto
+﻿from enum import Enum, auto
 
 
 class MeasureStep(Enum):
@@ -36,3 +36,4 @@ def get_step_label(step):
         return app._(key)
     except Exception:
         return STEP_LABEL_KEYS.get(step, "flow_step_idle")
+
