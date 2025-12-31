@@ -9,18 +9,18 @@ CMD_AXIS0_MOVE = 100
 
 
 class ManualScreen(MDScreen):
-    """Manual / Jog page for all 5 motors (2 slides + 3 rotary/extension axes).
+    """Manual / Jog page for 5 motors (2 slides + 3 rotary/extension axes).
 
-    ���ڻ�����ʾ UI��֮��������� _apply_linear_jog / _apply_rotary_jog / home_* ��
-    ���������� PLC ָ�
+    Currently demo UI; later you can wire real PLC commands in
+    _apply_linear_jog / _apply_rotary_jog / home_*.
     """
 
-    # �������
+    # Shared step sizes
     linear_step_mm = NumericProperty(0.5)
     rotary_step_deg = NumericProperty(5.0)
 
     def on_kv_post(self, base_widget):
-        """kv ����ɺ��Ȱ� global_state ��ʼ������λ����"""
+        """After kv binding, init global_state position values."""
         live = global_state.live
 
         def init_attr(name, default):
@@ -28,14 +28,14 @@ class ManualScreen(MDScreen):
                 setattr(live, name, default)
             return getattr(live, name)
 
-        # ��֤��Щ���Դ���
-        init_attr("od_slide_mm", 0.0)  # �⾶��̨
-        init_attr("id_slide_mm", 0.0)  # �ھ���̨�����죩
-        init_attr("id_head_mm", 0.0)  # �ھ���ͷ����
-        init_attr("pipe_angle_deg", 0.0)  # ����ת
-        init_attr("aux_angle_deg", 0.0)  # ����ת
+        # Ensure these attributes exist
+        init_attr("od_slide_mm", 0.0)  # OD slide
+        init_attr("id_slide_mm", 0.0)  # ID slide (shared rail)
+        init_attr("id_head_mm", 0.0)  # ID probe extend/retract
+        init_attr("pipe_angle_deg", 0.0)  # Main rotation
+        init_attr("aux_angle_deg", 0.0)  # Aux rotation
         ids = self.ids
-        # λ����ʾ
+        # Position display
         if "od_pos_label" in ids:
             unit = MDApp.get_running_app()._("common_unit_mm")
             ids.od_pos_label.text = f"{live.od_slide_mm:0.1f} {unit}"
@@ -52,7 +52,7 @@ class ManualScreen(MDScreen):
             unit = MDApp.get_running_app()._("common_unit_deg")
             ids.aux_angle_label.text = f"{live.aux_angle_deg:0.1f} {unit}"
 
-        # ������ʾ & slider
+        # Step size display & slider
         if "linear_step_label" in ids:
             unit = MDApp.get_running_app()._("common_unit_mm")
             ids.linear_step_label.text = f"{self.linear_step_mm:0.1f} {unit}"
@@ -65,10 +65,10 @@ class ManualScreen(MDScreen):
         if "rot_step_slider" in ids:
             ids.rot_step_slider.value = self.rotary_step_deg
 
-    # ---------- ͨ������ Jog ----------
+    # ---------- Linear jog ----------
 
     def _apply_linear_jog(self, attr_name: str, direction: int):
-        """�����Բ����ƶ�ĳ���ᣬdirection = ��1"""
+        """Move a linear axis by step; direction = +/-1."""
         live = global_state.live
         step = float(self.linear_step_mm)
 
@@ -87,12 +87,12 @@ class ManualScreen(MDScreen):
             unit = MDApp.get_running_app()._("common_unit_mm")
             ids[lbl_id].text = f"{pos:0.1f} {unit}"
 
-        # TODO: ����� PLC ֱ���˶�����
+        # TODO: Send PLC linear move command here
 
-    # ---------- ͨ����ת Jog ----------
+    # ---------- Rotary jog ----------
 
     def _apply_rotary_jog(self, attr_name: str, direction: int):
-        """���ǶȲ�����תĳ���ᣬdirection = ��1"""
+        """Rotate an axis by angle step; direction = +/-1."""
         live = global_state.live
         step = float(self.rotary_step_deg)
 
@@ -110,9 +110,9 @@ class ManualScreen(MDScreen):
             unit = MDApp.get_running_app()._("common_unit_deg")
             ids[lbl_id].text = f"{ang:0.1f} {unit}"
 
-        # TODO: ����� PLC ��ת����
+        # TODO: Send PLC rotary command here
 
-    # ---------- �����ᰴť�ص� ----------
+    # ---------- Linear axis button callbacks ----------
 
     def jog_od_neg(self):
         self._apply_linear_jog("od_slide_mm", -1)
@@ -127,11 +127,11 @@ class ManualScreen(MDScreen):
         self._apply_linear_jog("id_slide_mm", +1)
 
     def jog_head_in(self):
-        """�ھ���ͷ����"""
+        """Retract ID probe."""
         self._apply_linear_jog("id_head_mm", -1)
 
     def jog_head_out(self):
-        """�ھ���ͷ���"""
+        """Extend ID probe."""
         self._apply_linear_jog("id_head_mm", +1)
 
     def home_od(self):
@@ -140,7 +140,7 @@ class ManualScreen(MDScreen):
         if "od_pos_label" in self.ids:
             unit = MDApp.get_running_app()._("common_unit_mm")
             self.ids.od_pos_label.text = f"0.0 {unit}"
-        # TODO: PLC Home ����
+        # TODO: PLC home command
 
     def home_id(self):
         live = global_state.live
@@ -156,7 +156,7 @@ class ManualScreen(MDScreen):
             unit = MDApp.get_running_app()._("common_unit_mm")
             self.ids.head_pos_label.text = f"0.0 {unit}"
 
-    # ---------- ��ת�ᰴť�ص� ----------
+    # ---------- Rotary axis button callbacks ----------
 
     def jog_main_ccw(self):
         self._apply_rotary_jog("pipe_angle_deg", -1)
@@ -184,7 +184,7 @@ class ManualScreen(MDScreen):
             unit = MDApp.get_running_app()._("common_unit_deg")
             self.ids.aux_angle_label.text = f"0.0 {unit}"
 
-    # ---------- ���� slider �ص� ----------
+    # ---------- Step slider callbacks ----------
 
     def on_linear_step_slider(self, value):
         self.linear_step_mm = float(value)
@@ -198,18 +198,18 @@ class ManualScreen(MDScreen):
             unit = MDApp.get_running_app()._("common_unit_deg")
             self.ids.rot_step_label.text = f"{self.rotary_step_deg:0.1f} {unit}"
 
-    # ---------- PLC ����ʾ������������ ----------
+    # ---------- PLC command examples (non-blocking) ----------
 
     def send_green_button(self):
-        """ʾ����ģ���̰�ť���"""
+        """Example: simulate green button start."""
         plc_service = MDApp.get_running_app().plc_service
         if plc_service:
             plc_service.enqueue_command(CMD_GREEN_BUTTON)
 
     def send_axis0_move(self, target_pos: float):
-        """ʾ������0 ��λ���payload ��Ŀ��λ�� tag"""
+        """Example: axis0 positioning command; payload carries target tag."""
         plc_service = MDApp.get_running_app().plc_service
         if plc_service:
             plc_service.enqueue_command(
                 CMD_AXIS0_MOVE, payload={"AXIS0_TARGET": float(target_pos)}
-            )
+            )
