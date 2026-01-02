@@ -64,14 +64,35 @@ class PlcService:
         return self._seq
 
     def _loop(self):
+        last_error = ""
         while not self._stop.is_set():
-            connected = self._ensure_connection()
+            connected = False
+            raw = {}
             try:
+                connected = self._ensure_connection()
                 self._drain_commands(connected)
-                raw = self._read_status(connected)
-                self._state = PlcState.from_raw(raw, connected=connected)
-            except Exception as exc:  # pragma: no cover - background guard
+
+                if connected:
+                    try:
+                        tags = tag_map.status_tags() + tag_map.command_tags()
+                        raw = self._client.read_tags(tags)
+                        connected = True
+                        last_error = ""
+                    except Exception as exc:
+                        connected = False
+                        last_error = str(exc)
+                        self._log.warning("PLC read failed: %s", exc)
+                        self._client.close()
+                else:
+                    raw = {}
+            except Exception as exc:
+                connected = False
+                last_error = str(exc)
                 self._log.exception("PLC loop error: %s", exc)
+                self._client.close()
+            st = PlcState.from_raw(raw, connected=connected)
+            st.last_error = last_error
+            self._state = st
             time.sleep(_POLL_INTERVAL)
 
     def _ensure_connection(self) -> bool:
@@ -80,7 +101,9 @@ class PlcService:
                 self._client.connect()
             return True
         except Exception as exc:
-            self._log.debug("PLC connect failed: %s", exc)
+            self._log.warning("PLC connect failed: %s", exc)
+            self._log.exception("PLC connect traceback")
+            self._client.close()
             return False
 
     def _drain_commands(self, connected: bool):
@@ -96,15 +119,15 @@ class PlcService:
         except Exception as exc:
             self._log.warning("PLC write failed: %s", exc)
 
-    def _read_status(self, connected: bool) -> Dict[str, Any]:
-        if not connected:
-            return {}
+    def _read_status(self) -> tuple[Dict[str, Any], bool]:
         tags = tag_map.status_tags() + tag_map.command_tags()
         try:
-            return self._client.read_tags(tags)
+            raw = self._client.read_tags(tags)
+            return raw, True
         except Exception as exc:
             self._log.warning("PLC read failed: %s", exc)
-            return {}
+            self._client.close()
+            return {}, False
 
     def _clear_queue(self):
         while True:
@@ -121,7 +144,7 @@ def get_plc_service(config) -> PlcService:
     global _plc_service
     if _plc_service is None:
         _plc_service = PlcService(
-            ip=config.get("plc_ip", "192.168.0.10"),
+            ip=config.get("plc_ip", "192.168.6.6"),
             slot=0,
             timeout=1.0,
             use_dummy=False,

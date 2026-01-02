@@ -9,7 +9,7 @@
             MDTopAppBarLeadingButtonContainer:
                 MDActionTopAppBarButton:
                     icon: "menu"
-                    on_release: app.open_drawer() if hasattr(app, "open_drawer") else None
+                    on_release: app.open_drawer(self)
 
             MDTopAppBarTitle:
                 text: app.i18n.current_lang and app._("home_title")

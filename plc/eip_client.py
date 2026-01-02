@@ -1,10 +1,21 @@
 import contextlib
 from typing import Any, Dict, List, Optional
 
-try:
-    from pycomm3 import LogixDriver  # preferred EtherNet/IP client
-except ImportError:  # pragma: no cover - optional dep
-    LogixDriver = None
+import time
+import socket
+import threading
+from pycomm3 import LogixDriver
+
+from infra.logger import get_logger
+
+
+def _tcp_probe(host: str, port: int = 44818, timeout: float = 1.0) -> bool:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(timeout)
+    try:
+        return s.connect_ex((host, port)) == 0
+    finally:
+        s.close()
 
 
 class EIPClient:
@@ -15,13 +26,35 @@ class EIPClient:
         self.slot = slot
         self.timeout = timeout
         self._driver: Optional[Any] = None
+        self._log = get_logger("plc.service")
 
     def connect(self):
-        if LogixDriver is None:
-            raise RuntimeError("pycomm3 not installed")
         path = f"{self.ip}/{self.slot}"
+        self._log.debug(
+            "Opening connection to PLC at %s (thread=%s)",
+            path,
+            threading.current_thread().name,
+        )
+
+        if not _tcp_probe(self.ip, 44818, timeout=min(1.0, self.timeout)):
+            raise TimeoutError(f"TCP probe failed: {self.ip}:44818 unreachable")
+
         self._driver = LogixDriver(path, timeout=self.timeout)
-        self._driver.open()
+
+        t0 = time.time()
+        self._log.debug("Driver.open() stat (timeout=%s)", self.timeout)
+        try:
+            self._driver.open()
+            self._log.debug("Drive.open() ok in %.3f sec", time.time() - t0)
+
+            self._driver.read("PLC_CYCLE_CNT")  # test read
+            self._log.debug("Handshake read ok in %.3f sec", time.time() - t0)
+        except Exception as e:
+            self._log.warning(
+                "Driver.open/handshake failed in %.3f sec: %s", time.time() - t0, e
+            )
+            self.close()
+            raise
 
     def close(self):
         with contextlib.suppress(Exception):
@@ -68,4 +101,3 @@ class DummyClient(EIPClient):
 
     def write_tags(self, writes: Dict[str, Any]):
         return
-

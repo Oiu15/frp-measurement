@@ -143,6 +143,7 @@ from ui.screens import (
     SettingsScreen,
     ResultScreen,
     AlarmScreen,
+    EipTestScreen,
 )
 
 
@@ -156,6 +157,7 @@ class FRPHMIDemo(MDApp):
         self.lang = self.config_data.get("lang", "zh_CN")
         locales_dir = resource_path("locales")
         self.i18n = I18N(locales_dir, default_lang=self.lang, fallback_lang="zh_CN")
+        self._drawer_menu = None
 
         self.plc_service = get_plc_service(self.config_data)
         global plc_service
@@ -231,6 +233,36 @@ class FRPHMIDemo(MDApp):
                     refresh_texts()
                 elif callable(refresh_lang):
                     refresh_lang()
+
+    def open_drawer(self, caller):
+        """Open top-left dropdown navigation menu."""
+        if self._drawer_menu is None:
+            items = [
+                {
+                    "text": self._("home_title") if hasattr(self, "_") else "Home",
+                    "on_release": lambda: self._nav_to("home"),
+                },
+                {"text": "Manual", "on_release": lambda: self._nav_to("manual")},
+                {"text": "Settings", "on_release": lambda: self._nav_to("settings")},
+                {"text": "EIP Test", "on_release": lambda: self._nav_to("eip_test")},
+                {"text": "Auto", "on_release": lambda: self._nav_to("auto")},
+                {"text": "Alarm", "on_release": lambda: self._nav_to("alarm")},
+            ]
+            self._drawer_menu = MDDropdownMenu(
+                caller=caller,
+                items=items,
+                position="auto",
+                width_mult=4,
+            )
+        else:
+            self._drawer_menu.caller = caller
+        self._drawer_menu.open()
+
+    def _nav_to(self, screen_name: str):
+        """Navigate to a screen and close the drawer."""
+        if self._drawer_menu:
+            self._drawer_menu.dismiss()
+        self.change_screen(screen_name)
 
 
 if __name__ == "__main__":

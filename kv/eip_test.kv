@@ -1,0 +1,96 @@
+<EipTestScreen>:
+    name: "eip_test"
+
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: dp(16)
+        spacing: dp(16)
+
+        MDTopAppBar:
+            type: "small"
+
+            MDTopAppBarLeadingButtonContainer:
+                MDActionTopAppBarButton:
+                    icon: "arrow-left"
+                    on_release: app.change_screen("home")
+
+            MDTopAppBarTitle:
+                text: app.i18n.current_lang and app._("eip_test_title")
+                halign: "center"
+
+            MDTopAppBarTrailingButtonContainer:
+                MDActionTopAppBarButton:
+                    icon: "translate"
+                    on_release: app.toggle_language()
+
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: dp(12)
+
+            MDLabel:
+                text: "Conn: " + root.conn_text
+                font_style: "Body"
+                role: "large"
+
+            MDCard:
+                padding: dp(12)
+                radius: dp(12)
+                elevation: 0
+
+                MDBoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    adaptive_height: True
+
+                    MDLabel:
+                        text: "PLC Status (Read Only)"
+                        font_style: "Title"
+                        role: "small"
+
+                    MDDivider:
+
+                    MDBoxLayout:
+                        adaptive_height: True
+                        spacing: dp(12)
+
+                        MDLabel:
+                            text: "CycleCnt: " + str(root.cycle_cnt)
+                        MDLabel:
+                            text: "Heartbeat: " + ("1" if root.heartbeat else "0")
+                        MDLabel:
+                            text: "EStop: " + ("1" if root.estop_active else "0")
+
+            MDCard:
+                padding: dp(12)
+                radius: dp(12)
+                elevation: 0
+
+                MDBoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    adaptive_height: True
+
+                    MDLabel:
+                        text: "Local Inputs (for verification)"
+                        font_style: "Title"
+                        role: "small"
+
+                    MDDivider:
+
+                    MDBoxLayout:
+                        adaptive_height: True
+                        spacing: dp(12)
+                        MDLabel:
+                            text: "EN: " + ("1" if root.en_local else "0")
+                        MDLabel:
+                            text: "UP: " + ("1" if root.jog_up else "0")
+                        MDLabel:
+                            text: "DN: " + ("1" if root.jog_dn else "0")
+
+                    MDBoxLayout:
+                        adaptive_height: True
+                        spacing: dp(12)
+                        MDLabel:
+                            text: "ABS1: " + ("1" if root.abs1 else "0")
+                        MDLabel:
+                            text: "ABS2: " + ("1" if root.abs2 else "0")

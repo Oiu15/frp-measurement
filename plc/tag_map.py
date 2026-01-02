@@ -13,6 +13,15 @@ AXIS1_POS = "AXIS1_POS"
 ALARM_CODE = "ALARM_CODE"
 COMM_HEALTH = "COMM_HEALTH"
 
+HB = "PLC_HEARTBEAT_1HZ"
+CYCLE = "PLC_CYCLE_CNT"
+ESTOP = "PLC_ESTOP_ACTIVE"
+EN_LOCAL = "PLC_EN_REQ_LOCAL"
+JOG_UP = "PLC_JOG_UP_LOCAL"
+JOG_DN = "PLC_JOG_DN_LOCAL"
+ABS1 = "PLC_ABS1_LOCAL"
+ABS2 = "PLC_ABS2_LOCAL"
+
 
 def command_tags():
     return [CMD_CODE, CMD_SEQ, CMD_REQ, CMD_ACK_SEQ, CMD_DONE_SEQ, CMD_ERR_CODE]
@@ -28,3 +37,6 @@ def status_tags():
         COMM_HEALTH,
     ]
 
+
+def eip_test_status_tags() -> list[str]:
+    return [HB, CYCLE, ESTOP, EN_LOCAL, JOG_UP, JOG_DN, ABS1, ABS2]

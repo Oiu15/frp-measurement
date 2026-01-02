@@ -40,6 +40,12 @@ class SettingsScreen(MDScreen):
         save_config(cfg)
         app = MDApp.get_running_app()
         svc = getattr(app, "plc_service", None)
+
         if svc:
-            svc.reconfigure(ip=cfg.get("plc_ip", "192.168.0.10"), slot=0, timeout=1.0)
-        # If measurement core needs sync, dispatch event/call API here
+            ip = cfg.get("plc_ip")
+            print("Reconfigure PLC IP ->", ip)
+
+            if not ip:
+                raise ValueError("plc_ip missing in config")
+
+            svc.reconfigure(ip=ip.strip(), slot=0, timeout=1.0)

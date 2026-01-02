@@ -4,6 +4,7 @@ from .home import HomeScreen
 from .manual import ManualScreen
 from .result import ResultScreen
 from .settings import SettingsScreen
+from .eip_test import EipTestScreen
 from ui.widgets.live_plot import LivePlotWidget
 
 __all__ = [
@@ -14,5 +15,5 @@ __all__ = [
     "ResultScreen",
     "SettingsScreen",
     "LivePlotWidget",
+    "EipTestScreen",
 ]
-
